@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt vé thành công</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .success-card { border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); padding: 20px; background: #f9f9f9; }
+        .total-price { font-size: 1.5rem; color: #d63384; font-weight: 700; }
+        .alert-success { display: none; }
+    </style>
+    <script>
+        function updateTotal() {
+            const price = parseFloat(document.getElementById('pricePerTicket').value) || 0;
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            const total = price * passengers;
+            document.getElementById('totalPrice').innerText = total.toLocaleString('vi-VN') + ' VND';
+            return total;
+        }
+
+        function saveChanges() {
+            const bookingId = document.getElementById('bookingId').value;
+            const price = parseFloat(document.getElementById('pricePerTicket').value) || 0;
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            const total = updateTotal();
+
+            fetch(`/booking/update/${bookingId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pricePerTicket: price, passengers: passengers, totalPrice: total })
+            })
+            .then(response => {
+                if(response.ok) {
+                    document.getElementById('alertSuccess').style.display = 'block';
+                } else {
+                    alert('Cập nhật thất bại!');
+                }
+            })
+            .catch(err => alert('Lỗi server: ' + err));
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pricePerTicket').addEventListener('input', updateTotal);
+            document.getElementById('passengers').addEventListener('input', updateTotal);
+        });
+    </script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-success">🎉 Đặt vé thành công!</h2>
+    <div class="alert alert-success" id="alertSuccess">Cập nhật đặt vé thành công!</div>
+    <div class="success-card mt-3">
+        <input type="hidden" id="bookingId" th:value="${booking.id}">
+        <p><strong>Họ và tên:</strong> <span th:text="${booking.fullName}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${booking.email}"></span></p>
+        <p><strong>Số điện thoại:</strong> <span th:text="${booking.phone}"></span></p>
+        <p><strong>Đi từ:</strong> <span th:text="${booking.fromCity}"></span></p>
+        <p><strong>Đến:</strong> <span th:text="${booking.toCity}"></span></p>
+        <p><strong>Ngày bay:</strong> <span th:text="${booking.date}"></span></p>
+        <div class="mb-3">
+            <label>Số hành khách:</label>
+            <input type="number" id="passengers" class="form-control" min="1" th:value="${booking.passengers}">
+        </div>
+        <div class="mb-3">
+            <label>Giá vé mỗi hành khách (VND):</label>
+            <input type="number" id="pricePerTicket" class="form-control" min="0" th:value="${booking.pricePerTicket}">
+        </div>
+        <p class="total-price">Tổng thanh toán: <span id="totalPrice" th:text="${booking.totalPrice}"></span> VND</p>
+        <button class="btn btn-warning" type="button" onclick="saveChanges()">Cập nhật đặt vé</button>
+    </div>
+    <a href="/booking" class="btn btn-success mt-3">Đặt vé khác</a>
+</div>
+</body>
+</html>

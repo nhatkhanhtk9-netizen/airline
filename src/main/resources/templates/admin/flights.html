@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Chuyến bay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar { height: 100vh; background-color: #343a40; color: white; padding-top: 20px; position: fixed; width: inherit; }
+        .sidebar .nav-link { color: #ccc; padding: 12px 20px; transition: all 0.3s ease; border-radius: 8px; margin: 4px 10px; }
+        .sidebar .nav-link:hover { background-color: #495057; color: #fff; transform: translateX(10px); font-weight: bold; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .sidebar .nav-link.active { color: white; background-color: #0d6efd; font-weight: bold; }
+        .main-content { margin-left: 16.666667%; padding: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 sidebar px-0">
+            <div class="text-center mb-4"><h4 class="fw-bold">FlyBooking Admin</h4></div>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin}">📊 Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/admin/flights}">✈️ Quản lý Chuyến bay</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">👥 Quản lý Người dùng</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/bookings}">🎫 Quản lý Đặt chỗ</a></li>
+                <li class="nav-item mt-5"><a class="nav-link text-danger" th:href="@{/logout}">🚪 Đăng xuất</a></li>
+            </ul>
+        </nav>
+
+        <main class="col-md-10 main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Quản lý Chuyến bay</h2>
+                <a th:href="@{/admin/flights/add}" class="btn btn-primary">➕ Thêm chuyến bay</a>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Số hiệu</th>
+                                <th>Điểm đi</th>
+                                <th>Điểm đến</th>
+                                <th>Khởi hành</th>
+                                <th>Giá vé</th>
+                                <th>Ghế trống</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="f : ${flights}">
+                                <td class="fw-bold" th:text="${f.flightNumber}">VN123</td>
+                                <td th:text="${f.origin}">Hà Nội</td>
+                                <td th:text="${f.destination}">Sài Gòn</td>
+                                <td th:text="${#temporals.format(f.departureTime, 'dd/MM/yyyy HH:mm')}">20/12/2023</td>
+                                <td th:text="${#numbers.formatDecimal(f.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1,000,000</td>
+                                <td th:text="${f.seatsAvailable}">100</td>
+                                <td>
+                                    <a th:href="@{/admin/flights/edit/{id}(id=${f.id})}" class="btn btn-sm btn-outline-warning">Sửa</a>
+                                    <a th:href="@{/admin/flights/delete/{id}(id=${f.id})}" class="btn btn-sm btn-outline-danger" 
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa chuyến bay này?')">Xóa</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

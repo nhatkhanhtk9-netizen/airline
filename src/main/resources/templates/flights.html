@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch vụ du lịch • Traveloka Style</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* BACKGROUND */
+        body { 
+            font-family: 'Segoe UI', sans-serif;
+            background: url('/images/nen2.webp') no-repeat center top;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #eef2f5;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.65);
+            z-index: -1;
+        }
+
+        /* STICKY MENU */
+        .sticky-menu {
+            background-color: #ffffffcc;
+            padding: 0.6rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1001; /* Tăng z-index lên một chút */
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-radius: 14px;
+            margin: 0.7rem auto;
+            backdrop-filter: blur(8px);
+            width: fit-content;
+            overflow: visible !important; /* Đảm bảo dropdown không bị che */
+        }
+
+        .sticky-menu .nav-link {
+            font-weight: 600;
+            padding: 0.55rem 1rem;
+            border-radius: 16px;
+            background: #f1f1f1;
+            color: #374151;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+        .sticky-menu .nav-link.active,
+        .sticky-menu .nav-link:hover {
+            color: #007bff;
+            background: rgba(0,123,255,0.12);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        /* LAYOUT */
+        .page-wrapper {
+            display: flex;
+            justify-content: space-between; /* Đẩy sang 2 bên */
+            padding: 10px 30px; /* Giảm padding top từ 40px xuống 10px */
+            gap: 20px;
+            max-width: 100%; /* Không giới hạn độ rộng để sát ra 2 bên */
+            margin: 0;
+        }
+
+        /* ADVERT - Trải dài 2 bên */
+        .ad {
+            width: 300px;
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        .ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 1.2s ease, transform 0.8s ease;
+            cursor: pointer;
+        }
+
+        .ad img.show {
+            opacity: 1;
+        }
+
+        .ad:hover img.show {
+            transform: scale(1.05);
+        }
+
+        @media(max-width: 1500px) {
+            .ad { width: 250px; }
+        }
+
+        @media(max-width: 1300px) {
+            .ad { width: 200px; }
+        }
+
+        @media(max-width: 1100px) {
+            .ad { width: 160px; }
+        }
+
+        @media(max-width: 992px) {
+            .ad { display: none; }
+        }
+
+        @media (max-width: 992px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            body::before {
+                backdrop-filter: none;
+            }
+
+            .sticky-menu {
+                width: 100% !important;
+                justify-content: flex-start;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 0;
+                margin: 0;
+                padding: 0.5rem;
+                scrollbar-width: none;
+            }
+            .sticky-menu::-webkit-scrollbar { display: none; }
+
+            .sticky-menu .nav-link {
+                white-space: nowrap;
+                padding: 0.4rem 0.8rem;
+                font-size: 13px;
+            }
+
+            .page-wrapper {
+                flex-direction: column;
+                padding: 10px 10px;
+            }
+
+            .form-container {
+                padding: 0;
+            }
+
+            .service-form {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
+            /* Flight Card Mobile */
+            .flight-card {
+                flex-direction: column;
+                padding: 15px;
+                align-items: stretch;
+            }
+
+            .airline-info {
+                margin-bottom: 15px;
+                border-bottom: 1px dashed #eee;
+                padding-bottom: 10px;
+            }
+
+            .flight-time-info {
+                gap: 15px;
+                margin-bottom: 15px;
+                justify-content: space-between;
+            }
+
+            .time {
+                font-size: 1.1rem;
+            }
+
+            .flight-duration {
+                min-width: 80px;
+            }
+
+            .flight-price-info {
+                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-top: 1px solid #eee;
+                padding-top: 10px;
+            }
+
+            .price {
+                font-size: 1.2rem;
+                margin-bottom: 0;
+            }
+
+            .btn-book {
+                padding: 8px 20px;
+            }
+        }
+
+        /* FORM CONTAINER - Cần cố định độ rộng ở giữa */
+        .form-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin: 0 auto; /* Căn giữa form */
+        }
+
+        .service-form {
+            background: white;
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.09);
+            transition: all .5s ease;
+        }
+
+        .service-form.hidden {
+            display: none; /* Sử dụng display none để không chiếm diện tích khi bị ẩn */
+        }
+
+        .service-form h4 {
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .service-form input,
+        .service-form select {
+            border-radius: 12px;
+            border: 1px solid #cfd4da;
+            padding: 10px 12px;
+            background: #f9fafb;
+            transition: all .25s;
+        }
+
+        .service-form input:focus,
+        .service-form select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 4px rgba(0,123,255,0.16);
+            background: #fff;
+        }
+
+        .service-form button {
+            padding: 14px 26px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            background: linear-gradient(135deg, #009dff, #007bff);
+            color: white;
+            transition: all .3s ease;
+        }
+
+        .service-form button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #007bff, #005fcc);
+        }
+
+        /* FLIGHT LIST STYLING */
+        .flight-list-container {
+            margin-top: 30px; /* Tăng khoảng cách một chút để tách biệt rõ ràng */
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .flight-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #f0f0f0;
+        }
+
+        .flight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+            border-color: #007bff;
+        }
+
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .airline-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .flight-time-info {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex: 2;
+            justify-content: center;
+        }
+
+        .time-box {
+            text-align: center;
+        }
+
+        .time {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .airport-code {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .flight-duration {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .duration-line {
+            width: 100%;
+            height: 2px;
+            background: #e5e7eb;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .duration-line::after {
+            content: "✈️";
+            position: absolute;
+            top: -10px;
+            right: 0;
+            font-size: 12px;
+        }
+
+        .flight-price-info {
+            flex: 1;
+            text-align: right;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff5e1f;
+            margin-bottom: 5px;
+        }
+
+        .btn-book {
+            background: #ff5e1f;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-book:hover {
+            background: #e54d00;
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            font-size: 1.6rem; /* Giảm nhẹ kích thước */
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px; /* Giảm khoảng cách dưới tiêu đề */
+            padding-left: 10px;
+            border-left: 5px solid #007bff;
+        }
+
+        /* --- CUSTOM SELECT WITH ARROW --- */
+        .select-wrapper {
+            position: relative;
+            display: block;
+        }
+
+        .select-wrapper select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px !important; /* Dành chỗ cho mũi tên */
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Click xuyên qua mũi tên vào select */
+            color: #007bff;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .select-wrapper:hover .select-arrow {
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        /* --- BACK HOME BUTTON STYLING --- */
+        .btn-back-home {
+            background: linear-gradient(45deg, #0d6efd, #00d2ff);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-back-home:hover {
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+            background: linear-gradient(45deg, #00d2ff, #0d6efd);
+        }
+
+        .btn-back-home i {
+            font-size: 1.1rem;
+        }
+
+        /* --- DROPDOWN WHITE PANEL --- */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown:hover > .dropdown-menu {
+            display: block;
+            margin-top: 0;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 10px;
+            background-color: #ffffff;
+            animation: fadeIn 0.3s ease;
+            z-index: 2000;
+            position: absolute;
+            min-width: 200px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            left: 0;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #0d6efd;
+            transform: translateX(5px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SWAP BUTTON STYLE --- */
+        .swap-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 25px; /* Để icon căn giữa 2 select */
+        }
+
+        .btn-swap {
+            width: 35px;
+            height: 35px;
+            background: white;
+            border: 1px solid #cfd4da;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 5;
+            color: #007bff;
+        }
+
+        .btn-swap:hover {
+            border-color: #007bff;
+            transform: rotate(180deg);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+        }
+
+        .btn-swap i {
+            font-size: 1.1rem;
+        }
+
+        /* --- SWAP ANIMATION --- */
+        .swap-active-left {
+            animation: slideRight 0.4s ease forwards;
+        }
+        .swap-active-right {
+            animation: slideLeft 0.4s ease forwards;
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(50px); opacity: 0.5; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideLeft {
+            0% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(-50px); opacity: 0.5; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="container-fluid bg-white shadow-sm py-2 px-4 mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <a href="/index1" class="d-flex align-items-center text-decoration-none">
+            <img src="/images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+            <span class="h4 mb-0 fw-bold text-primary">FlyBooking</span>
+        </a>
+        <a href="/index1" class="btn-back-home">
+            <span>🏠</span> Quay lại trang chủ
+        </a>
+    </div>
+
+    <form class="d-flex d-lg-none w-100 mt-2" action="/search" method="get">
+        <div class="input-group">
+            <input type="search" name="query" class="form-control" placeholder="Tìm chuyến bay, khách sạn..." aria-label="Search">
+            <button class="btn btn-primary" type="submit">🔍</button>
+        </div>
+    </form>
+</div>
+
+<!-- MENU -->
+<nav class="sticky-menu">
+    <a class="nav-link active" data-target="flightForm">✈️ Vé Máy Bay</a>
+    <a class="nav-link" data-target="hotelForm">🏨 Khách Sạn</a>
+    <a class="nav-link" data-target="busForm">🚌 Xe Khách</a>
+    <a class="nav-link" data-target="airportForm">🚕 Đưa Đón Sân Bay</a>
+    <a class="nav-link" data-target="carForm">🚗 Thuê Xe</a>
+    <a class="nav-link" data-target="activityForm">🎟 Trải Nghiệm</a>
+    
+    <!-- DROPDOWN WHITE PANEL -->
+    <div class="dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button">
+            Hoạt động & Vui chơi
+        </a>
+        <div class="dropdown-menu shadow-lg">
+            <a class="dropdown-item" href="/activities/combo">Combo</a>
+            <a class="dropdown-item" href="/activities/insurance">Bảo hiểm</a>
+            <a class="dropdown-item" href="/activities/tours">Tour trải nghiệm</a>
+        </div>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- AD LEFT -->
+    <div class="ad" id="adLeft"></div>
+
+    <!-- FORM CONTAINER -->
+    <div class="form-container">
+
+        <!-- ================= VÉ MÁY BAY ================ -->
+        <div id="flightForm" class="service-form">
+            <form th:action="@{/flights}" method="get" id="flightSearchForm" novalidate>
+                <h4>Tìm chuyến bay</h4>
+
+                <div class="mb-2 text-center">
+                    <label class="me-3"><input type="radio" name="flyTrip" value="one" id="oneWayTrip" checked> Một chiều</label>
+                    <label><input type="radio" name="flyTrip" value="round" id="roundTrip"> Khứ hồi</label>
+                </div>
+
+                <div class="row g-2 align-items-end flex-nowrap">
+                    <div class="col">
+                        <label class="small fw-bold">Điểm đi</label>
+                        <div class="select-wrapper">
+                            <select class="form-select form-select-sm" id="originSelect" name="origin" required>
+                                <option value="" disabled selected>Chọn điểm đi</option>
+                                <option value="Hà Nội" th:selected="${searchOrigin} == 'Hà Nội'">Hà Nội (HAN)</option>
+                                <option value="TP. Hồ Chí Minh" th:selected="${searchOrigin} == 'TP. Hồ Chí Minh'">TP. Hồ Chí Minh (SGN)</option>
+                                <option value="Đà Nẵng" th:selected="${searchOrigin} == 'Đà Nẵng'">Đà Nẵng (DAD)</option>
+                                <option value="Nha Trang" th:selected="${searchOrigin} == 'Nha Trang'">Nha Trang (CXR)</option>
+                                <option value="Phú Quốc" th:selected="${searchOrigin} == 'Phú Quốc'">Phú Quốc (PQC)</option>
+                                <option value="Hải Phòng" th:selected="${searchOrigin} == 'Hải Phòng'">Hải Phòng (HPH)</option>
+                                <option value="Cần Thơ" th:selected="${searchOrigin} == 'Cần Thơ'">Cần Thơ (VCA)</option>
+                                <option value="Huế" th:selected="${searchOrigin} == 'Huế'">Huế (HUI)</option>
+                             </select>
+                             <span class="select-arrow">▼</span>
+                         </div>
+                     </div>
+                     <div class="col-auto px-0">
+                        <div class="swap-container pb-1">
+                            <div class="btn-swap" id="swapBtn" title="Hoán đổi điểm đi/đến" style="width: 30px; height: 30px;">
+                                <i class="bi bi-arrow-left-right" style="font-size: 0.9rem;"></i>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="col">
+                         <label class="small fw-bold">Điểm đến</label>
+                         <div class="select-wrapper">
+                             <select class="form-select form-select-sm" id="destSelect" name="destination" required>
+                                 <option value="" disabled selected>Chọn điểm đến</option>
+                                 <option value="TP. Hồ Chí Minh" th:selected="${searchDestination} == 'TP. Hồ Chí Minh'">TP. Hồ Chí Minh (SGN)</option>
+                                 <option value="Hà Nội" th:selected="${searchDestination} == 'Hà Nội'">Hà Nội (HAN)</option>
+                                 <option value="Đà Nẵng" th:selected="${searchDestination} == 'Đà Nẵng'">Đà Nẵng (DAD)</option>
+                                 <option value="Nha Trang" th:selected="${searchDestination} == 'Nha Trang'">Nha Trang (CXR)</option>
+                                 <option value="Phú Quốc" th:selected="${searchDestination} == 'Phú Quốc'">Phú Quốc (PQC)</option>
+                                 <option value="Hải Phòng" th:selected="${searchDestination} == 'Hải Phòng'">Hải Phòng (HPH)</option>
+                                 <option value="Cần Thơ" th:selected="${searchDestination} == 'Cần Thơ'">Cần Thơ (VCA)</option>
+                                 <option value="Huế" th:selected="${searchDestination} == 'Huế'">Huế (HUI)</option>
+                             </select>
+                             <span class="select-arrow">▼</span>
+                         </div>
+                     </div>
+                    <div class="col">
+                        <label class="small fw-bold">Ngày đi</label>
+                        <input type="date" class="form-control form-control-sm" id="departureDate" name="date" th:value="${searchDate}" required>
+                    </div>
+                    <div class="col" id="returnDateColumn" style="display: none;">
+                        <label class="small fw-bold">Ngày về</label>
+                        <input type="date" class="form-control form-control-sm" id="returnDate" name="returnDate">
+                    </div>
+                    <div class="col-auto" style="width: 80px;">
+                        <label class="small fw-bold">Khách</label>
+                        <div class="select-wrapper">
+                            <select class="form-select form-select-sm" id="guestSelect" name="guests">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            <span class="select-arrow">▼</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="flightFormAlert" class="text-danger small mt-2 d-none">
+                    Vui lòng chọn đầy đủ điểm đi, điểm đến và ngày đi.
+                </div>
+
+                <div class="mt-3 text-center">
+                    <input type="hidden" name="submitted" value="1">
+                    <button type="submit">Tìm chuyến bay</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ================= KHÁCH SẠN ================ -->
+        <div id="hotelForm" class="service-form hidden">
+            <form>
+                <h4>Tìm khách sạn</h4>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label>Địa điểm</label>
+                        <input class="form-control" placeholder="Đà Nẵng">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Nhận phòng</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Trả phòng</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Khách</label>
+                        <div class="select-wrapper">
+                            <select class="form-select"><option>1</option><option>2</option></select>
+                            <span class="select-arrow">▼</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-center">
+                    <button>Tìm khách sạn</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ================= XE KHÁCH ================ -->
+        <div id="busForm" class="service-form hidden">
+            <form>
+                <h4>Xe khách & Limousine</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-3"><label>Từ</label><input class="form-control" placeholder="Hà Nội"></div>
+                    <div class="col-md-3"><label>Đến</label><input class="form-control" placeholder="TP.HCM"></div>
+                    <div class="col-md-3"><label>Ngày đi</label><input type="date" class="form-control"></div>
+                    <div class="col-md-3">
+                        <label>Số ghế</label>
+                        <div class="select-wrapper">
+                            <select class="form-select"><option>1</option></select>
+                            <span class="select-arrow">▼</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-center"><button>Tìm xe khách</button></div>
+            </form>
+        </div>
+
+        <!-- ================= ĐƯA ĐÓN SÂN BAY ================ -->
+        <div id="airportForm" class="service-form hidden">
+            <form>
+                <h4>Đưa đón sân bay</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-3"><label>Từ sân bay</label><input class="form-control" placeholder="HAN"></div>
+                    <div class="col-md-3"><label>Đến</label><input class="form-control" placeholder="Hà Nội"></div>
+                    <div class="col-md-3"><label>Ngày</label><input type="date" class="form-control"></div>
+                    <div class="col-md-3"><label>Giờ</label><input type="time" class="form-control"></div>
+                </div>
+
+                <div class="mt-3 text-center"><button>Tìm xe đưa đón</button></div>
+            </form>
+        </div>
+
+        <!-- ================= THUÊ XE ================ -->
+        <div id="carForm" class="service-form hidden">
+            <form>
+                <h4>Thuê xe tự lái</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-3"><label>Địa điểm</label><input class="form-control" placeholder="HCM"></div>
+                    <div class="col-md-3"><label>Bắt đầu</label><input type="date" class="form-control"></div>
+                    <div class="col-md-3"><label>Giờ</label><input type="time" class="form-control"></div>
+                    <div class="col-md-3"><label>Kết thúc</label><input type="date" class="form-control"></div>
+                </div>
+
+                <div class="mt-3 text-center"><button>Tìm xe</button></div>
+            </form>
+        </div>
+
+        <!-- ================= TRẢI NGHIỆM ================ -->
+        <div id="activityForm" class="service-form hidden">
+            <h4>Trải nghiệm & vui chơi</h4>
+            <p class="text-center text-muted">Các tour, vé tham quan sẽ được cập nhật...</p>
+        </div>
+
+        <!-- ================= DANH SÁCH CHUYẾN BAY (TÁCH RIÊNG) ================ -->
+        <div class="flight-list-container">
+            <h3 class="section-title" th:text="${searchActive} ? 'Kết quả tìm kiếm' : 'Chuyến bay phổ biến'">Chuyến bay phổ biến</h3>
+
+            <div th:if="${searchActive} and ${#lists.isEmpty(flights)}" class="alert alert-warning mt-3">
+                Không tìm thấy chuyến bay phù hợp. Vui lòng thử lại với điểm đi/đến và ngày bay khác.
+            </div>
+            
+            <div th:each="flight : ${flights}" class="flight-card">
+                <div class="airline-info">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; font-weight: bold; font-size: 0.8rem;">
+                        FB
+                    </div>
+                    <div>
+                        <div class="fw-bold" style="font-size: 0.95rem;" th:text="${flight.flightNumber}">VJ123</div>
+                        <div class="small text-muted" th:text="${airlineByFlightId[flight.id]}">VietJet Air</div>
+                        <div class="small text-muted" th:text="${flight.origin} + ' → ' + ${flight.destination}">Hà Nội → TP.HCM</div>
+                    </div>
+                </div>
+
+                <div class="flight-time-info">
+                    <div class="time-box">
+                        <div class="time" th:text="${#temporals.format(flight.departureTime, 'HH:mm')}">08:00</div>
+                        <div class="airport-code" th:text="${airportCodeByCity[flight.origin] ?: flight.origin}">HAN</div>
+                    </div>
+
+                    <div class="flight-duration">
+                        <span>2h 10m</span>
+                        <div class="duration-line"></div>
+                        <span class="text-primary fw-bold d-none d-md-block" style="font-size: 0.75rem;">FLYBOOKING AIR</span>
+                    </div>
+
+                    <div class="time-box">
+                        <div class="time" th:text="${#temporals.format((flight.arrivalTime != null ? flight.arrivalTime : flight.departureTime.plusHours(2)), 'HH:mm')}">10:10</div>
+                        <div class="airport-code" th:text="${airportCodeByCity[flight.destination] ?: flight.destination}">SGN</div>
+                    </div>
+                </div>
+
+                <div class="flight-price-info">
+                    <div>
+                        <div class="price" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">1.200.000 VNĐ</div>
+                        <div class="text-muted small">/người</div>
+                    </div>
+                    <a th:href="@{/flight/form(flightId=${flight.id})}" class="btn-book">Đặt vé</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AD RIGHT -->
+    <div class="ad" id="adRight"></div>
+</div>
+
+<script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    const forms = document.querySelectorAll('.service-form');
+    const flightList = document.querySelector('.flight-list-container');
+
+    // BANNER THEO TỪNG TAB
+    const bannerSet = {
+        flightForm: ['/images/MBa1.jpg','/images/MBa2.jpg'],
+        hotelForm: ['/images/KS1.webp','/images/KS2.jpg'],
+        busForm: ['/images/XK1.jpg','/images/XK2.jpg'],
+        airportForm: ['/images/xedd1.jpg','/images/xedd2.jpg'],
+        carForm: ['/images/ThXe1.webp','/images/ThXe2.webp'],
+        activityForm: ['/images/qc-activity1.webp','/images/qc-activity2.webp']
+    };
+
+    let currentForm = "flightForm";
+    let index = 0;
+    let timer;
+
+    const L = document.getElementById("adLeft");
+    const R = document.getElementById("adRight");
+
+    function updateAds() {
+        const list = bannerSet[currentForm];
+        
+        L.innerHTML = "";
+        R.innerHTML = "";
+        
+        const imgL = document.createElement("img");
+        imgL.src = list[index];
+        imgL.classList.add("show");
+        
+        const imgR = document.createElement("img");
+        imgR.src = list[index];
+        imgR.classList.add("show");
+        
+        L.appendChild(imgL);
+        R.appendChild(imgR);
+    }
+
+    function nextAds() {
+        const list = bannerSet[currentForm];
+        index = (index + 1) % list.length;
+        updateAds();
+    }
+
+    function showAds(form) {
+        currentForm = form;
+        index = 0;
+        updateAds();
+        clearInterval(timer);
+        timer = setInterval(nextAds, 5000);
+    }
+
+    // SWITCH FORM
+    navLinks.forEach(btn => {
+        btn.addEventListener("click", () => {
+            navLinks.forEach(n => n.classList.remove("active"));
+            btn.classList.add("active");
+
+            const id = btn.dataset.target;
+            forms.forEach(f => f.classList.add("hidden"));
+            document.getElementById(id).classList.remove("hidden");
+
+            // Hiển thị/ẩn danh sách chuyến bay dựa trên tab được chọn
+            if (id === "flightForm") {
+                flightList.style.display = "block";
+            } else {
+                flightList.style.display = "none";
+            }
+
+            showAds(id);
+        });
+    });
+
+    showAds("flightForm");
+
+    // SWAP ORIGIN AND DESTINATION
+    const swapBtn = document.getElementById('swapBtn');
+    const originSelect = document.getElementById('originSelect');
+    const destSelect = document.getElementById('destSelect');
+
+    if (swapBtn && originSelect && destSelect) {
+        swapBtn.addEventListener('click', function() {
+            // Sửa lỗi: Tìm wrapper đúng theo cấu trúc HTML mới (.col thay vì .col-md-3)
+            const originWrapper = originSelect.closest('.col');
+            const destWrapper = destSelect.closest('.col');
+            
+            if (originWrapper && destWrapper) {
+                originWrapper.classList.add('swap-active-left');
+                destWrapper.classList.add('swap-active-right');
+            }
+            
+            // Đợi hiệu ứng chạy xong rồi mới đổi giá trị (0.4s)
+            setTimeout(() => {
+                const val1 = originSelect.value;
+                const val2 = destSelect.value;
+                
+                originSelect.value = val2;
+                destSelect.value = val1;
+                
+                // Cập nhật lại localStorage ngay lập tức sau khi hoán đổi
+                localStorage.setItem('flight_origin', originSelect.value);
+                localStorage.setItem('flight_dest', destSelect.value);
+                
+                // Xóa class để có thể chạy lại lần sau
+                if (originWrapper && destWrapper) {
+                    originWrapper.classList.remove('swap-active-left');
+                    destWrapper.classList.remove('swap-active-right');
+                }
+            }, 400);
+        });
+    }
+
+    // TOGGLE RETURN DATE BASED ON TRIP TYPE
+    const oneWayTrip = document.getElementById('oneWayTrip');
+    const roundTrip = document.getElementById('roundTrip');
+    const returnDateColumn = document.getElementById('returnDateColumn');
+
+    if (oneWayTrip && roundTrip && returnDateColumn) {
+        oneWayTrip.addEventListener('change', function() {
+            if (this.checked) {
+                returnDateColumn.style.display = 'none';
+            }
+        });
+
+        roundTrip.addEventListener('change', function() {
+            if (this.checked) {
+                returnDateColumn.style.display = 'block';
+            }
+        });
+    }
+
+    // PERSIST FORM DATA
+    const formFields = [
+        { id: 'originSelect', key: 'flight_origin' },
+        { id: 'destSelect', key: 'flight_dest' },
+        { id: 'departureDate', key: 'flight_dep_date' },
+        { id: 'returnDate', key: 'flight_ret_date' },
+        { id: 'guestSelect', key: 'flight_guests' },
+        { id: 'oneWayTrip', key: 'flight_type_one', isRadio: true },
+        { id: 'roundTrip', key: 'flight_type_round', isRadio: true }
+    ];
+
+    // Load data from localStorage
+    window.addEventListener('load', () => {
+        const codeToCity = {
+            HAN: 'Hà Nội',
+            SGN: 'TP. Hồ Chí Minh',
+            DAD: 'Đà Nẵng',
+            CXR: 'Nha Trang',
+            PQC: 'Phú Quốc',
+            HPH: 'Hải Phòng',
+            VCA: 'Cần Thơ',
+            HUI: 'Huế'
+        };
+
+        formFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (!element) return;
+
+            const savedValue = localStorage.getItem(field.key);
+            if (savedValue !== null) {
+                if (field.isRadio) {
+                    element.checked = savedValue === 'true';
+                    // Cập nhật hiển thị ngày về nếu cần
+                    if (field.id === 'roundTrip' && element.checked) {
+                        returnDateColumn.style.display = 'block';
+                    }
+                } else {
+                    if (element.tagName === 'SELECT') {
+                        const mappedValue = codeToCity[savedValue] || savedValue;
+                        const optionExists = Array.from(element.options).some(opt => opt.value === mappedValue);
+                        if (optionExists) {
+                            element.value = mappedValue;
+                        } else {
+                            localStorage.removeItem(field.key);
+                        }
+                    } else {
+                        element.value = savedValue;
+                    }
+                }
+            }
+        });
+
+        if (typeof validateFlightForm === 'function') {
+            validateFlightForm(false);
+        }
+    });
+
+    // Save data to localStorage on change
+    formFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (!element) return;
+
+        element.addEventListener('change', () => {
+            if (field.isRadio) {
+                // Khi radio thay đổi, lưu trạng thái của cả 2 radio trong nhóm
+                localStorage.setItem('flight_type_one', document.getElementById('oneWayTrip').checked);
+                localStorage.setItem('flight_type_round', document.getElementById('roundTrip').checked);
+            } else {
+                localStorage.setItem(field.key, element.value);
+            }
+        });
+    });
+
+    // VALIDATE EMPTY FIELDS (RED REMINDER)
+    const flightSearchForm = document.getElementById('flightSearchForm');
+    const flightFormAlert = document.getElementById('flightFormAlert');
+
+    function setInvalid(el, invalid) {
+        if (!el) return;
+        if (invalid) el.classList.add('is-invalid');
+        else el.classList.remove('is-invalid');
+    }
+
+    function validateFlightForm(showAlert) {
+        const origin = document.getElementById('originSelect');
+        const dest = document.getElementById('destSelect');
+        const dep = document.getElementById('departureDate');
+
+        const originOk = origin && origin.value;
+        const destOk = dest && dest.value;
+        const depOk = dep && dep.value;
+
+        setInvalid(origin, !originOk);
+        setInvalid(dest, !destOk);
+        setInvalid(dep, !depOk);
+
+        const ok = Boolean(originOk && destOk && depOk);
+        if (flightFormAlert) {
+            if (!ok && showAlert) flightFormAlert.classList.remove('d-none');
+            if (ok) flightFormAlert.classList.add('d-none');
+        }
+        return ok;
+    }
+
+    if (flightSearchForm) {
+        flightSearchForm.addEventListener('submit', (e) => {
+            if (!validateFlightForm(true)) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    ['originSelect', 'destSelect', 'departureDate'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('change', () => validateFlightForm(false));
+    });
+</script>
+
+</body>
+</html>

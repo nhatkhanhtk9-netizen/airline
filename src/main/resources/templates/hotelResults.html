@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả tìm kiếm khách sạn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f7f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* New Header Style */
+        .main-header {
+            background: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #f2f3f3;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            color: #d32f2f;
+            font-size: 1.8rem;
+        }
+        .logo-text-red {
+            color: #d32f2f;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        .logo-text-black {
+            color: #333;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        .header-search {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+        }
+        .header-search input {
+            width: 100%;
+            border-radius: 25px;
+            padding: 8px 45px 8px 20px;
+            border: 1px solid #007bff;
+            background: #f8f9fa;
+        }
+        .header-search i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+        .header-right-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .btn-promo {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-promo i { color: #d32f2f; }
+        .text-logout { color: #d32f2f; font-weight: 700; text-decoration: none; }
+        
+        /* Bottom Navigation Bar */
+        .bottom-nav-bar {
+            background: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #f2f3f3;
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #444;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .nav-item:hover { color: #007bff; }
+        .nav-item i { font-size: 1.1rem; color: #555; }
+        .nav-item.active { color: #007bff; }
+        .nav-item.active i { color: #007bff; }
+
+        /* Top Search Bar Style */
+        .search-params-bar {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .param-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            cursor: pointer;
+        }
+        .param-item i { color: #687176; font-size: 1.2rem; }
+        .param-text { line-height: 1.2; }
+        .param-label { font-size: 0.75rem; color: #687176; margin: 0; }
+        .param-value { font-size: 0.95rem; font-weight: 600; margin: 0; }
+        
+        /* Sidebar Filter Style */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .filter-title { font-weight: 700; font-size: 1rem; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .filter-reset { color: #0194f3; font-size: 0.85rem; text-decoration: none; font-weight: 600; }
+        
+        .map-preview {
+            background: url('https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/108.45,11.94,12/280x150?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTAwMTlxM29hNW9ndmNueGgifQ.p_98n9_68n9_68n9_68n9_w') center;
+            height: 120px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .map-btn {
+            background: #0194f3;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(1, 148, 243, 0.3);
+        }
+
+        .price-range-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #687176; margin-top: 10px; }
+        
+        .form-check-label { font-size: 0.9rem; color: #434343; cursor: pointer; }
+        .form-check-input:checked { background-color: #0194f3; border-color: #0194f3; }
+        
+        /* Sort & View Options */
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .results-count span { font-weight: 700; }
+        .sort-select { border: none; background: transparent; font-weight: 600; color: #0194f3; cursor: pointer; padding: 5px; }
+
+        /* Hotel Card Style */
+        .hotel-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: flex;
+            transition: all 0.3s ease;
+        }
+        .hotel-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+        
+        .hotel-gallery { width: 300px; position: relative; flex-shrink: 0; }
+        .main-img { width: 100%; height: 200px; object-fit: cover; }
+        .thumb-row { display: flex; height: 60px; }
+        .thumb-img { width: 33.33%; height: 100%; object-fit: cover; border: 1px solid white; cursor: pointer; }
+        .thumb-more { position: relative; }
+        .thumb-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;
+        }
+
+        .hotel-content { flex-grow: 1; padding: 20px; display: flex; justify-content: space-between; }
+        .hotel-main-info { flex-grow: 1; }
+        .hotel-name { font-weight: 800; font-size: 1.25rem; color: #333; margin-bottom: 5px; }
+        .hotel-type-stars { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .hotel-type { color: #0194f3; font-weight: 700; font-size: 0.85rem; }
+        .stars { color: #ffc107; font-size: 0.85rem; }
+        
+        .hotel-location { font-size: 0.9rem; color: #687176; margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
+        .amenities-tags span {
+            background: #f2f3f3; color: #687176; padding: 4px 10px; border-radius: 4px;
+            font-size: 0.75rem; font-weight: 600; margin-right: 5px;
+        }
+
+        .hotel-pricing { width: 220px; border-left: 1px solid #f2f3f3; padding-left: 20px; text-align: right; display: flex; flex-direction: column; justify-content: space-between; }
+        .rating-badge { margin-bottom: 15px; }
+        .rating-text { font-weight: 700; color: #0194f3; font-size: 0.9rem; margin-right: 5px; }
+        .rating-count { font-size: 0.8rem; color: #687176; }
+        .rating-value { background: #eef7ff; color: #0194f3; font-weight: 800; padding: 4px 8px; border-radius: 8px 8px 8px 0; font-size: 0.95rem; }
+
+        .price-original { text-decoration: line-through; color: #687176; font-size: 0.85rem; margin-bottom: 2px; }
+        .price-current { color: #ff5e1f; font-weight: 900; font-size: 1.4rem; margin-bottom: 2px; }
+        .price-note { font-size: 0.75rem; color: #687176; margin-bottom: 15px; }
+        
+        .btn-choose { background: #ff5e1f; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; width: 100%; transition: all 0.2s; }
+        .btn-choose:hover { background: #e04f18; }
+
+        .promo-tag { background: #fff8e5; color: #ffc107; border: 1px solid #ffc107; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; margin-top: 10px; }
+
+        @media (max-width: 768px) {
+            .header-right-menu { display: none; }
+            .header-search { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Header -->
+<header class="main-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Logo Section -->
+            <a href="/" class="header-logo">
+                <i class="bi bi-airplane-engines-fill logo-icon"></i>
+                <div class="d-flex flex-column lh-1">
+                    <span class="logo-text-red">AnhflyTravel</span>
+                    <span class="logo-text-black">FLY</span>
+                </div>
+            </a>
+
+            <!-- Search Bar Section -->
+            <form class="header-search d-none d-md-block" action="/search" method="get">
+                <input type="search" name="query" placeholder="Tìm chuyến bay, khách sạn...">
+                <i class="bi bi-search"></i>
+            </form>
+
+            <!-- Right Menu Section -->
+            <div class="header-right-menu">
+                <button class="btn btn-promo">
+                    <i class="bi bi-stars"></i> Khuyến mãi
+                </button>
+                <span>Đặt chỗ của tôi</span>
+                <span>Hợp tác</span>
+                <div class="dropdown">
+                    <span class="dropdown-toggle" data-bs-toggle="dropdown">VNĐ</span>
+                </div>
+                <a href="#" class="text-logout">Đăng xuất</a>
+            </div>
+        </div>
+
+        <form class="d-flex d-md-none w-100 mt-2" action="/search" method="get">
+            <div class="input-group">
+                <input type="search" name="query" class="form-control" placeholder="Tìm chuyến bay, khách sạn..." aria-label="Search">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</header>
+
+<!-- Bottom Nav Bar -->
+<nav class="bottom-nav-bar mb-0">
+    <div class="container">
+        <ul class="nav-list">
+            <li class="nav-item"><i class="bi bi-airplane"></i> Vé Máy Bay</li>
+            <li class="nav-item active text-primary"><i class="bi bi-buildings"></i> Khách sạn</li>
+            <li class="nav-item"><i class="bi bi-train-front"></i> Tàu hỏa</li>
+            <li class="nav-item"><i class="bi bi-bus-front"></i> Xe khách</li>
+            <li class="nav-item"><i class="bi bi-ticket-perforated"></i> Trải nghiệm</li>
+            <li class="nav-item"><i class="bi bi-car-front"></i> Thuê xe</li>
+            <li class="nav-item">Hoạt động & Vui chơi <i class="bi bi-chevron-down ms-1"></i></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Top Search Parameters Bar -->
+<div class="search-params-bar mb-4">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="param-item">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <div class="param-text">
+                        <p class="param-label">Điểm đến</p>
+                        <p class="param-value" th:text="${booking != null ? 'Đà Lạt' : 'Điểm đến'}">Đà Lạt</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="param-item">
+                    <i class="bi bi-calendar-event"></i>
+                    <div class="param-text">
+                        <p class="param-label">Thời gian</p>
+                        <p class="param-value" th:text="${booking != null ? #temporals.format(booking.checkIn, 'dd/MM') + ' - ' + #temporals.format(booking.checkOut, 'dd/MM') + ', 1 đêm' : 'Chọn ngày'}">25 thg 3 - 26 thg 3, 1 đêm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="param-item">
+                    <i class="bi bi-people-fill"></i>
+                    <div class="param-text">
+                        <p class="param-label">Số khách & phòng</p>
+                        <p class="param-value" th:text="${booking != null ? booking.guests + ' người lớn, 0 Trẻ em, 1 phòng' : 'Chọn khách'}">2 người lớn, 0 Trẻ em, 1 phòng</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100 h-100 rounded-pill fw-bold">Tìm khách sạn <i class="bi bi-search ms-1"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <aside class="col-lg-3">
+            <div class="filter-section p-0 overflow-hidden border-0">
+                <div class="map-preview">
+                    <div class="map-btn">Explore on Map</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Khoảng giá <a href="#" class="filter-reset">Đặt lại</a></div>
+                <p class="text-muted small">1 phòng, 1 đêm</p>
+                <input type="range" class="form-range" min="0" max="24000000" step="100000">
+                <div class="price-range-label">
+                    <span>0 VND</span>
+                    <span>24.000.000 VND</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Lọc phổ biến <i class="bi bi-chevron-up"></i></div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="f1" checked>
+                    <label class="form-check-label w-100" for="f1">Phòng sang giá tốt</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="f2">
+                    <label class="form-check-label w-100" for="f2">Ở lâu giảm sâu</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="f3">
+                    <label class="form-check-label w-100" for="f3">Lựa chọn hàng đầu du lịch</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="f4" checked>
+                    <label class="form-check-label w-100" for="f4">Có bữa sáng</label>
+                </div>
+                <a href="#" class="text-primary small fw-bold text-decoration-none">Xem Tất cả</a>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Khu vực <i class="bi bi-chevron-up"></i></div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="a1" checked>
+                    <label class="form-check-label w-100" for="a1">Phường 3 <span class="text-muted small float-end">(291)</span></label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="a2">
+                    <label class="form-check-label w-100" for="a2">Phường 4 <span class="text-muted small float-end">(290)</span></label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Results -->
+        <main class="col-lg-9">
+            <div class="results-header">
+                <div class="results-count">
+                    <h5 class="m-0">Đà Lạt</h5>
+                    <p class="text-muted small m-0"><span>1913</span> nơi lưu trú được tìm thấy</p>
+                </div>
+                <div class="sort-options d-flex align-items-center gap-3">
+                    <span class="small text-muted">Xếp theo:</span>
+                    <select class="sort-select">
+                        <option>Độ phổ biến</option>
+                        <option>Giá thấp nhất</option>
+                        <option>Đánh giá cao nhất</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Hotel Card 1 -->
+            <div class="hotel-card">
+                <div class="hotel-gallery">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800" class="main-img" alt="Hotel">
+                    <div class="thumb-row">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4df85b?q=80&w=300" class="thumb-img" alt="T1">
+                        <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=300" class="thumb-img" alt="T2">
+                        <div class="thumb-img thumb-more">
+                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=300" class="w-100 h-100 object-fit-cover" alt="T3">
+                            <div class="thumb-overlay">Xem ảnh</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-content">
+                    <div class="hotel-main-info">
+                        <h4 class="hotel-name">Nature Hotel - Le Hong Phong</h4>
+                        <div class="hotel-type-stars">
+                            <span class="hotel-type"><i class="bi bi-buildings"></i> Khách sạn</span>
+                            <span class="stars">★★★★</span>
+                        </div>
+                        <p class="hotel-location"><i class="bi bi-geo-alt-fill"></i> Phường 4, Đà Lạt</p>
+                        <div class="amenities-tags mb-3">
+                            <span>Khu vui chơi trẻ em</span>
+                            <span>Cho thuê xe hơi</span>
+                            <span>Trung tâm thể dục thể hình</span>
+                            <span class="bg-transparent">+3</span>
+                        </div>
+                        <div class="promo-tag">
+                            <i class="bi bi-percent me-1"></i> Mã KSLUONGVEVN giảm đến 200k
+                        </div>
+                    </div>
+                    <div class="hotel-pricing">
+                        <div class="rating-badge">
+                            <span class="rating-text">Rất tốt</span>
+                            <span class="rating-count">(73 đánh giá)</span>
+                            <span class="rating-value">8.7/10</span>
+                        </div>
+                        <div class="price-info">
+                            <p class="text-danger small m-0"><i class="bi bi-lightning-fill"></i> Deal chớp nhoáng!</p>
+                            <p class="price-original">444.156 VND</p>
+                            <p class="price-current">406.536 VND</p>
+                            <p class="price-note">Tổng 469.549 VND<br>cho 1 phòng</p>
+                            <button class="btn-choose">Chọn phòng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotel Card 2 -->
+            <div class="hotel-card">
+                <div class="hotel-gallery">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800" class="main-img" alt="Hotel">
+                    <div class="thumb-row">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff43c638f614?q=80&w=300" class="thumb-img" alt="T1">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=300" class="thumb-img" alt="T2">
+                        <div class="thumb-img thumb-more">
+                            <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=300" class="w-100 h-100 object-fit-cover" alt="T3">
+                            <div class="thumb-overlay">Xem ảnh</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-content">
+                    <div class="hotel-main-info">
+                        <h4 class="hotel-name">The Luxe Hotel Dalat</h4>
+                        <div class="hotel-type-stars">
+                            <span class="hotel-type"><i class="bi bi-buildings"></i> Khách sạn</span>
+                            <span class="stars">★★★</span>
+                        </div>
+                        <p class="hotel-location"><i class="bi bi-geo-alt-fill"></i> Phường 3, Đà Lạt</p>
+                        <div class="amenities-tags mb-3">
+                            <span>Sân thượng/Sân hiên</span>
+                        </div>
+                        <p class="text-success small"><i class="bi bi-check-circle me-1"></i> Không thanh toán ngay</p>
+                        <div class="promo-tag">
+                            <i class="bi bi-percent me-1"></i> Mã KSLUONGVEVN giảm đến 200k
+                        </div>
+                    </div>
+                    <div class="hotel-pricing">
+                        <div class="rating-badge">
+                            <span class="rating-text">Rất tốt</span>
+                            <span class="rating-count">(1,4N đánh giá)</span>
+                            <span class="rating-value">8.5/10</span>
+                        </div>
+                        <div class="price-info">
+                            <p class="text-warning small m-0"><i class="bi bi-gem me-1"></i> Deal đặc biệt</p>
+                            <p class="price-original">541.066 VND</p>
+                            <p class="price-current">405.800 VND</p>
+                            <p class="price-note">Tổng 468.700 VND<br>cho 1 phòng</p>
+                            <button class="btn-choose">Chọn phòng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotel Card 3 -->
+            <div class="hotel-card">
+                <div class="hotel-gallery">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=800" class="main-img" alt="Hotel">
+                    <div class="thumb-row">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=300" class="thumb-img" alt="T1">
+                        <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?q=80&w=300" class="thumb-img" alt="T2">
+                        <div class="thumb-img thumb-more">
+                            <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=300" class="w-100 h-100 object-fit-cover" alt="T3">
+                            <div class="thumb-overlay">Xem ảnh</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-content">
+                    <div class="hotel-main-info">
+                        <h4 class="hotel-name">Pontus Hotel</h4>
+                        <div class="hotel-type-stars">
+                            <span class="hotel-type"><i class="bi bi-buildings"></i> Khách sạn</span>
+                            <span class="stars">★★★</span>
+                        </div>
+                        <p class="hotel-location"><i class="bi bi-geo-alt-fill"></i> Phường 1, Đà Lạt</p>
+                        <div class="amenities-tags mb-3">
+                            <span>Dù (ô) che nắng</span>
+                        </div>
+                        <p class="text-success small"><i class="bi bi-check-circle me-1"></i> Không thanh toán ngay</p>
+                    </div>
+                    <div class="hotel-pricing">
+                        <div class="rating-badge">
+                            <span class="rating-text">Rất tốt</span>
+                            <span class="rating-count">(872 đánh giá)</span>
+                            <span class="rating-value">8.9/10</span>
+                        </div>
+                        <div class="price-info">
+                            <p class="text-success small m-0"><i class="bi bi-arrow-down-circle me-1"></i> Ưu đãi có hạn</p>
+                            <p class="price-original">489.091 VND</p>
+                            <p class="price-current">405.000 VND</p>
+                            <p class="price-note">Tổng 467.775 VND<br>cho 1 phòng</p>
+                            <button class="btn-choose">Chọn phòng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner 2 thanh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .logo {
+            height: 50px;
+            transition: height 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                height: 40px;
+            }
+        }
+
+        /* --- FOOTER STYLES --- */
+        .footer-main {
+            background-color: #1a1d20;
+            color: #dee2e6;
+            padding-top: 4rem;
+            padding-bottom: 2rem;
+        }
+
+        .footer-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-link:hover {
+            color: #0d6efd;
+            padding-left: 5px;
+        }
+
+        .footer-contact-info {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #0d6efd;
+            transform: translateY(-3px);
+        }
+
+        .app-download-btn {
+            display: block;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .app-download-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .payment-partners {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .payment-logo {
+            height: 30px;
+            filter: grayscale(1) brightness(2);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .payment-logo:hover {
+            filter: grayscale(0) brightness(1);
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-main {
+                text-align: left;
+            }
+            .social-links {
+                justify-content: flex-start;
+            }
+            .payment-partners {
+                justify-content: flex-start;
+            }
+            .app-download-btn {
+                margin-left: 0;
+            }
+        }
+
+        .support-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #0d6efd;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            text-decoration: none;
+            z-index: 999;
+        }
+        .support-btn:hover {
+            background-color: #0a58ca;
+            transform: scale(1.08);
+        }
+
+        .promo-btn {
+            background-color: #ffc107;
+            color: #212529;
+            font-weight: 500;
+            border-radius: 5px;
+            padding: 6px 12px;
+            transition: 0.3s;
+        }
+        .promo-btn:hover {
+            background-color: #e0a800;
+            color: white;
+        }
+
+        /* CUSTOM HAMBURGER (3 GẠCH) */
+        .navbar-toggler {
+            border: none !important;
+            padding: 0.5rem;
+            background: transparent !important;
+            box-shadow: none !important;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 45px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .navbar-toggler:hover {
+            background-color: rgba(13, 110, 253, 0.05) !important;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: #0d6efd;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        /* Animation khi mở (dùng aria-expanded của Bootstrap) */
+        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Thanh menu dịch vụ */
+        .service-menu {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .service-menu .nav-link {
+            color: #333;
+            font-weight: 500;
+        }
+        .service-menu .nav-link:hover {
+            color: #0d6efd;
+        }
+        @media (hover: hover) {
+            .dropdown:hover>.dropdown-menu {
+                display: block;
+                margin-top: 0;
+            }
+        }
+
+/* Sticky menu */
+.sticky-menu {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem; /* khoảng cách giữa các menu */
+}
+
+/* Menu link */
+.service-search-sticky .nav-link {
+    font-weight: 500;
+    color: #333;
+    transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px; /* bo góc mềm mại */
+    background-color: #ffffff;
+}
+
+/* Hover: đổi xanh + scale + shadow nổi nhẹ */
+.service-search-sticky .nav-link:hover {
+    color: #0d6efd;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25); /* shadow nổi nhẹ */
+    background-color: rgba(13, 110, 253, 0.05); /* nền nhạt */
+}
+
+/* Active: giữ màu xanh + scale + shadow nổi */
+.service-search-sticky .nav-link.active {
+    color: #0d6efd;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25); /* shadow nổi nhẹ */
+    background-color: rgba(13, 110, 253, 0.08);
+}
+/* Form nổi dưới menu */
+.service-form-sticky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none; /* Ẩn mặc định */
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.6s cubic-bezier(0.77,0,0.175,1), opacity 0.5s ease;
+    width: 100%;
+    z-index: 1;
+}
+
+.service-form-sticky.active-form {
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 2;
+}
+
+@media (max-width: 576px) {
+    .navbar .container-fluid {
+        gap: 0.5rem;
+    }
+
+    .navbar form.d-flex {
+        width: 100%;
+        max-width: none !important;
+        flex: 1 0 100%;
+        order: 3;
+    }
+
+    .support-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .sticky-menu {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+    }
+    .sticky-menu::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    .sticky-menu .nav-link {
+        white-space: nowrap;
+        scroll-snap-align: start;
+        padding: 0.4rem 0.6rem;
+        font-size: 14px;
+    }
+
+    /* Carousel mobile improvements */
+    .carousel-caption {
+        bottom: 10px;
+        padding: 10px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 10px;
+        width: 90%;
+        left: 5%;
+    }
+    .carousel-caption h2 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    .carousel-caption p {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+    .carousel-caption .input-group-lg {
+        transform: scale(0.8);
+        margin-top: 0 !important;
+    }
+
+    #serviceFormsSticky {
+        min-height: 0 !important;
+        position: static !important;
+    }
+
+    .service-search-sticky .nav-link,
+    .service-search-sticky .nav-link:hover,
+    .service-search-sticky .nav-link.active {
+        transform: none;
+    }
+
+    .service-form-sticky {
+        position: static;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+        transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.77,0,0.175,1);
+    }
+
+    .service-form-sticky input,
+    .service-form-sticky select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .service-form-sticky button {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <!-- THANH 1: Logo + Nút chức năng -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-2">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/images/logo.png" alt="Logo" class="logo me-2">
+                <span class="fw-bold">FlyBooking</span>
+            </a>
+
+            <!-- Thanh tìm kiếm trong Navbar -->
+            <form class="d-flex ms-lg-4 my-2 my-lg-0 flex-grow-1" action="/search" method="GET" style="max-width: 500px;">
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="Tìm chuyến bay, khách sạn, điểm đến..." aria-label="Search">
+                    <button class="btn btn-primary" type="submit">
+                        🔍
+                    </button>
+                </div>
+            </form>
+
+            <!-- Toggle cho mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topMenu"
+                    aria-controls="topMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="topMenu">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+                    <li class="nav-item">
+                        <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/my-booking">Đặt chỗ của tôi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/partnership">Hợp tác</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            VNĐ
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="currencyDropdown">
+                            <li><a class="dropdown-item" href="?currency=USD">USD</a></li>
+                            <li><a class="dropdown-item" href="?currency=EUR">EUR</a></li>
+                            <li><a class="dropdown-item" href="?currency=VND">VND</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-success btn-sm" href="/login">Đăng nhập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary btn-sm" href="/register">Đăng ký</a>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+    </nav>
+
+    <!-- THANH 2: Menu dịch vụ -->
+    <nav class="navbar navbar-expand-lg service-menu">
+        <div class="container-fluid">
+            <!-- Toggle mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#serviceMenu2"
+                    aria-controls="serviceMenu2" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="serviceMenu2">
+                <ul class="navbar-nav align-items-center justify-content-start gap-3 w-100">
+                     <li class="nav-item">
+                <a class="nav-link" href="/flights">✈️ Vé máy bay</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/hotels">🏨 Khách sạn</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/trains">🚆 Tàu hỏa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/buses">🚌 Xe khách</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/activities">🎫 Trải nghiệm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/car-rental">🚗 Thuê xe</a>
+                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="activitiesDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            Hoạt động & Vui chơi
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="activitiesDropdown">
+                            <li><a class="dropdown-item" href="/activities/combo">Combo</a></li>
+                            <li><a class="dropdown-item" href="/activities/insurance">Bảo hiểm</a></li>
+                            <li><a class="dropdown-item" href="/activities/tours">Tour trải nghiệm</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<!-- THANH 3: Menu dịch vụ + Form tương ứng -->
+<section class="service-search-sticky">
+    <div class="container">
+        <!-- Menu dịch vụ -->
+        <ul class="nav justify-content-center mb-2 sticky-menu" id="serviceMenuSticky">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-service="flight">✈️ Vé Máy Bay</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-service="hotel">🏨 Khách Sạn</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-service="trains">🚗 Tàu Hỏa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-service="buses">🚗 Xe Khách</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-service="activities">🚗 Trải Nghiệm</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-service="car">🚗 Thuê Xe</a>
+            </li>
+            <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="activitiesDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            Hoạt động & Vui chơi
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="activitiesDropdown">
+                            <li><a class="dropdown-item" href="/activities/combo">Combo</a></li>
+                            <li><a class="dropdown-item" href="/activities/insurance">Bảo hiểm</a></li>
+                            <li><a class="dropdown-item" href="/activities/tours">Tour trải nghiệm</a></li>
+                        </ul>
+                    </li>
+        </ul>
+
+        <!-- Form dịch vụ -->
+        <div id="serviceFormsSticky" class="position-relative" style="min-height:180px;">
+            <!-- Form Vé máy bay -->
+            <form id="flightFormSticky" class="service-form-sticky active-form" action="/flight/submit" method="POST">
+                <input type="text" name="from" class="form-control" placeholder="Điểm đi" required>
+                <input type="text" name="to" class="form-control" placeholder="Điểm đến" required>
+                <input type="date" name="departureDate" class="form-control" required>
+                <input type="date" name="returnDate" class="form-control">
+                <select name="passenger" class="form-select">
+                    <option value="1" selected>1 hành khách</option>
+                    <option value="2">2 hành khách</option>
+                    <option value="3">3 hành khách</option>
+                </select>
+                <select name="classType" class="form-select">
+                    <option value="Phổ thông" selected>Phổ thông</option>
+                    <option value="Thương gia">Thương gia</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Tìm chuyến bay</button>
+            </form>
+
+            <!-- Form Khách sạn -->
+            <form id="hotelFormSticky" class="service-form-sticky" action="/bookingKS/submit" method="POST">
+                <input type="text" name="fullName" class="form-control" placeholder="Họ tên" required>
+                <input type="text" name="email" class="form-control" placeholder="Email" required>
+                <input type="text" name="phone" class="form-control" placeholder="Số điện thoại" required>
+                <input type="date" name="checkIn" class="form-control" required>
+                <input type="date" name="checkOut" class="form-control" required>
+                <select name="guests" class="form-select">
+                    <option value="1" selected>1 khách</option>
+                    <option value="2">2 khách</option>
+                </select>
+                <select name="roomType" class="form-select">
+                    <option value="Standard" selected>Standard</option>
+                    <option value="Deluxe">Deluxe</option>
+                </select>
+                <button type="submit" class="btn btn-success">Tìm khách sạn</button>
+            </form>
+
+            <!-- Form Tàu hỏa -->
+            <form id="trainsFormSticky" class="service-form-sticky">
+                <input type="text" class="form-control" placeholder="Điểm đi">
+                <input type="text" class="form-control" placeholder="Điểm đến">
+                <input type="date" class="form-control">
+                <select class="form-select">
+                    <option selected>Số hành khách</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+                <button type="submit" class="btn btn-info">Tìm tàu hỏa</button>
+               
+            </form>
+            <!-- Form Xe khách -->
+            <form id="busesFormSticky" class="service-form-sticky">
+                <input type="text" class="form-control" placeholder="Điểm đi">
+                <input type="text" class="form-control" placeholder="Điểm đến">
+                <input type="date" class="form-control">
+                <select class="form-select">
+                    <option selected>Số hành khách</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+                <button type="submit" class="btn btn-secondary">Tìm xe khách</button>
+            </form>
+            <!-- Form Trải nghiệm -->
+            <form id="activitiesFormSticky" class="service-form-sticky">
+                <input type="text" class="form-control" placeholder="Địa điểm">
+                <input type="date" class="form-control">
+                <button type="submit" class="btn btn-dark">Tìm trải nghiệm</button>
+            </form>
+            <!-- Form Thuê xe -->
+            <form id="carFormSticky" class="service-form-sticky">
+                <input type="text" class="form-control" placeholder="Điểm nhận xe">
+                <input type="date" class="form-control">
+                <select class="form-select">
+                    <option selected>Số hành khách</option>
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+                <button type="submit" class="btn btn-warning">Tìm xe</button>
+            </form>
+
+
+        </div>
+    </div>
+</section>  
+
+<script>
+const menuLinksSticky = document.querySelectorAll('#serviceMenuSticky .nav-link');
+const formsSticky = document.querySelectorAll('.service-form-sticky');
+
+menuLinksSticky.forEach(link => {
+    link.addEventListener('click', function(e){
+        e.preventDefault();
+
+        // Remove active trên tất cả menu
+        menuLinksSticky.forEach(l => l.classList.remove('active'));
+
+        // Set active cho menu đang click
+        this.classList.add('active');
+
+        const service = this.dataset.service;
+
+        // Ẩn tất cả form
+        formsSticky.forEach(f => {
+            f.classList.remove('active-form');
+        });
+
+        // Hiển thị form tương ứng với menu active
+        const activeForm = document.getElementById(service + 'FormSticky');
+        activeForm.classList.add('active-form');
+
+        // Scroll lên menu nếu cần
+        const menuTop = document.querySelector('.sticky-menu').offsetTop;
+        window.scrollTo({top: menuTop, behavior: 'smooth'});
+    });
+});
+
+// Hiển thị mặc định form đầu tiên
+document.getElementById('flightFormSticky').classList.add('active-form');
+</script>
+
+
+        <!-- Nút hỗ trợ nổi -->
+        <a href="/support" class="support-btn">💬 Trung tâm hỗ trợ</a>
+
+        <!-- Hero Section -->
+        <div class="container my-4">
+            <div id="heroCarousel" class="carousel slide shadow-lg rounded" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    <div class="carousel-item active">
+                        <img src="/images/nen1.jpg" class="d-block w-100" alt="Banner 1" style="max-height: 400px; object-fit: cover;">
+                        <div class="carousel-caption">
+                            <h2 class="fw-bold">Khám phá thế giới cùng FlyBooking</h2>
+                            <p>Ưu đãi vé máy bay và khách sạn cực lớn cho mùa hè này!</p>
+                            
+                            <!-- Search Bar in Hero section -->
+                            <div class="mt-4 mx-auto" style="max-width: 600px;">
+                                <form action="/search" method="GET" class="input-group input-group-lg shadow">
+                                    <input type="text" name="query" class="form-control border-0" placeholder="Bạn muốn đi đâu? (VD: Phú Quốc, Đà Nẵng...)" aria-label="Hero Search">
+                                    <button class="btn btn-warning border-0 px-4 fw-bold" type="submit">Tìm ngay</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/images/nen2.webp" class="d-block w-100" alt="Banner 2" style="max-height: 400px; object-fit: cover;">
+                        <div class="carousel-caption">
+                            <h2 class="fw-bold">Chuyến bay giá rẻ mỗi ngày</h2>
+                            <p>Săn vé 0 đồng và nhận ngay voucher giảm giá.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Promotions Section -->
+        <div class="container my-5">
+            <h3 class="fw-bold mb-4">🔥 Ưu đãi cực sốc</h3>
+            <div class="row g-3 g-md-4">
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="/images/qc1.webp" class="card-img-top rounded" alt="Promo 1">
+                        <div class="card-body p-2 p-md-3">
+                            <h6 class="card-title fw-bold mb-1">Giảm 50% khi đặt qua App</h6>
+                            <p class="card-text small text-muted mb-0">Dành cho khách hàng mới.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="/images/qc2.jpg" class="card-img-top rounded" alt="Promo 2">
+                        <div class="card-body p-2 p-md-3">
+                            <h6 class="card-title fw-bold mb-1">Combo Tiết kiệm - 30%</h6>
+                            <p class="card-text small text-muted mb-0">Vé máy bay + Khách sạn 5 sao.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="/images/qc3.jpg" class="card-img-top rounded" alt="Promo 3">
+                        <div class="card-body p-2 p-md-3">
+                            <h6 class="card-title fw-bold mb-1">Voucher Khách sạn Đà Lạt</h6>
+                            <p class="card-text small text-muted mb-0">Chỉ từ 499k/đêm.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="/images/qc4.jpg" class="card-img-top rounded" alt="Promo 4">
+                        <div class="card-body p-2 p-md-3">
+                            <h6 class="card-title fw-bold mb-1">Thứ 3 vui vẻ - Vé 0đ</h6>
+                            <p class="card-text small text-muted mb-0">Săn ngay vé rẻ mỗi tuần.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flights List Section -->
+        <div class="container my-5">
+            <h3 class="fw-bold mb-4">✈️ Chuyến bay nổi bật</h3>
+            <div class="row g-3 g-md-4" th:if="${not #lists.isEmpty(flights)}">
+                <div class="col-6 col-md-3" th:each="f : ${flights}">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="/images/flight1.jpg" class="card-img-top rounded" alt="Flight">
+                        <div class="card-body p-2 p-md-3">
+                            <h6 class="card-title fw-bold mb-1" style="font-size: 0.9rem;" th:text="${f.origin + ' → ' + f.destination}">Hà Nội → Sài Gòn</h6>
+                            <p class="text-primary fw-bold mb-1" style="font-size: 0.85rem;" th:text="${#numbers.formatDecimal(f.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</p>
+                            <p class="card-text small text-muted mb-2 d-none d-md-block">
+                                📅 Khởi hành: <span th:text="${#temporals.format(f.departureTime, 'dd/MM/yyyy HH:mm')}">20/12/2023</span>
+                            </p>
+                            <a th:href="@{/flights/{id}(id=${f.id})}" class="btn btn-outline-primary btn-sm w-100">Chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center py-5" th:if="${#lists.isEmpty(flights)}">
+                <p class="text-muted">Hiện chưa có chuyến bay nào được cập nhật.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+    <footer class="footer-main mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Cột 1: Giới thiệu & Địa chỉ -->
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title">Về FlyBooking</h5>
+                    <p class="footer-contact-info">
+                        FlyBooking là nền tảng đặt vé máy bay và khách sạn hàng đầu, mang đến trải nghiệm du lịch thông minh và tiết kiệm cho mọi hành khách.
+                    </p>
+                    <div class="footer-contact-info">
+                        <p class="mb-1">📍 <strong>Địa chỉ:</strong> Tòa nhà ABC, 123 Đường Láng, Đống Đa, Hà Nội</p>
+                        <p class="mb-1">📞 <strong>Hotline:</strong> 1900 1234</p>
+                        <p class="mb-1">✉️ <strong>Email:</strong> support@flybooking.vn</p>
+                    </div>
+                </div>
+
+                <!-- Cột 2: Sản phẩm & Dịch vụ -->
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Sản phẩm</h5>
+                    <a href="/flights" class="footer-link">Vé máy bay</a>
+                    <a href="/hotels" class="footer-link">Khách sạn</a>
+                    <a href="/trains" class="footer-link">Vé tàu hỏa</a>
+                    <a href="/buses" class="footer-link">Xe khách</a>
+                    <a href="/activities" class="footer-link">Trải nghiệm</a>
+                </div>
+
+                <!-- Cột 3: Liên kết công ty -->
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Công ty</h5>
+                    <a href="/about" class="footer-link">Giới thiệu</a>
+                    <a href="/news" class="footer-link">Tin tức</a>
+                    <a href="/careers" class="footer-link">Tuyển dụng</a>
+                    <a href="/terms" class="footer-link">Điều khoản</a>
+                    <a href="/privacy" class="footer-link">Chính sách bảo mật</a>
+                </div>
+
+                <!-- Cột 4: Tải app & Theo dõi -->
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title">Tải ứng dụng FlyBooking</h5>
+                    <div class="d-flex flex-column align-items-start app-links-container">
+                        <a href="#" class="app-download-btn">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" height="40">
+                        </a>
+                        <a href="#" class="app-download-btn">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" height="40">
+                        </a>
+                    </div>
+                    
+                    <h5 class="footer-title mt-4">Theo dõi chúng tôi</h5>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">f</a>
+                        <a href="#" class="social-icon">y</a>
+                        <a href="#" class="social-icon">t</a>
+                        <a href="#" class="social-icon">in</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Đối tác thanh toán -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5 class="footer-title text-center mb-4">Đối tác thanh toán</h5>
+                    <div class="payment-partners justify-content-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" class="payment-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" class="payment-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" class="payment-logo">
+                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Transparent.png" alt="MoMo" class="payment-logo">
+                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay-Square.png" alt="ZaloPay" class="payment-logo">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom text-center">
+                <p class="mb-0 small text-secondary">
+                    &copy; 2026 Công ty Cổ phần Du lịch FlyBooking. Bảo lưu mọi quyền.
+                </p>
+                <div class="mt-2">
+                    <a href="/admin/login" class="text-secondary text-decoration-none small">Admin Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

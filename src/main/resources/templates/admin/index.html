@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            width: inherit;
+        }
+        .sidebar .nav-link {
+            color: #ccc;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 4px 10px;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+            color: #fff;
+            transform: translateX(10px);
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+            font-weight: bold;
+        }
+        .main-content {
+            margin-left: 16.666667%;
+            padding: 30px;
+        }
+        .card-stat {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .card-stat:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+            filter: brightness(1.1);
+        }
+        .card-stat h2 {
+            transition: all 0.3s ease;
+        }
+        .card-stat:hover h2 {
+            transform: scale(1.1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 sidebar px-0">
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">FlyBooking Admin</h4>
+                <p class="text-muted small">Quản trị hệ thống</p>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/admin}">📊 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/flights}">✈️ Quản lý Chuyến bay</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/users}">👥 Quản lý Người dùng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/bookings}">🎫 Quản lý Đặt chỗ</a>
+                </li>
+                <li class="nav-item mt-5">
+                    <a class="nav-link text-danger" th:href="@{/logout}">🚪 Đăng xuất</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-10 main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Tổng quan hệ thống</h2>
+                <div class="text-muted" th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card card-stat bg-primary text-white shadow">
+                        <div class="card-body py-4">
+                            <h5 class="card-title opacity-75">Tổng chuyến bay</h5>
+                            <h2 class="display-4 fw-bold" th:text="${flightCount}">0</h2>
+                            <a th:href="@{/admin/flights}" class="text-white text-decoration-none small">Chi tiết →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-stat bg-success text-white shadow">
+                        <div class="card-body py-4">
+                            <h5 class="card-title opacity-75">Người dùng đăng ký</h5>
+                            <h2 class="display-4 fw-bold" th:text="${userCount}">0</h2>
+                            <a th:href="@{/admin/users}" class="text-white text-decoration-none small">Chi tiết →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-stat bg-info text-white shadow">
+                        <div class="card-body py-4">
+                            <h5 class="card-title opacity-75">Đơn đặt chỗ</h5>
+                            <h2 class="display-4 fw-bold" th:text="${bookingCount}">0</h2>
+                            <a th:href="@{/admin/bookings}" class="text-white text-decoration-none small">Chi tiết →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Hoạt động gần đây</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted text-center py-4">Hệ thống đang hoạt động ổn định.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Lối tắt nhanh</h5>
+                        </div>
+                        <div class="card-body d-grid gap-2">
+                            <a th:href="@{/admin/flights/add}" class="btn btn-outline-primary text-start">➕ Thêm chuyến bay mới</a>
+                            <a th:href="@{/}" class="btn btn-outline-secondary text-start" target="_blank">🌐 Xem trang chủ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

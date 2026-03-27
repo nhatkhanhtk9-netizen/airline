@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Lỗi</title></head>
+<body>
+<h1>Có lỗi xảy ra</h1>
+<div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <p><strong>Thông báo lỗi:</strong> <span th:text="${error}">Internal Server Error</span></p>
+    <p th:if="${message}"><strong>Chi tiết:</strong> <span th:text="${message}">Chi tiết lỗi ở đây</span></p>
+    <p th:if="${path}"><strong>Đường dẫn:</strong> <span th:text="${path}">/url</span></p>
+</div>
+<p><a href="/" class="btn btn-primary">Quay lại trang chủ</a></p>
+</body>
+</html>

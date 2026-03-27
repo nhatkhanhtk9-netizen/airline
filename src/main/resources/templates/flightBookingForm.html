@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin hành khách - FlyBooking</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f0f2f5; 
+            color: #1a1a1a;
+        }
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        .booking-steps {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 10px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #adb5bd;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .step.active { color: #0d6efd; }
+        .step.active .step-num { background: #0d6efd; color: white; }
+        .step-num {
+            width: 24px;
+            height: 24px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: #e9ecef;
+            align-self: center;
+        }
+        .form-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: 700;
+            color: #0d6efd;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1.5px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+        }
+        .btn-confirm {
+            background: linear-gradient(135deg, #0d6efd 0%, #00d2ff 100%);
+            border: none;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+        @media (max-width: 768px) {
+            .booking-steps { display: none; }
+            .form-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Mini Navbar -->
+<nav class="navbar sticky-top">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold text-primary" href="/">
+            <i class="fas fa-plane-departure me-2"></i>FlyBooking
+        </a>
+        <a href="javascript:history.back()" class="text-muted text-decoration-none small">
+            <i class="fas fa-chevron-left me-1"></i> Quay lại
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Progress Steps -->
+    <div class="booking-steps">
+        <div class="step"><div class="step-num">1</div> Chọn chuyến bay</div>
+        <div class="step-line"></div>
+        <div class="step active"><div class="step-num">2</div> Thông tin hành khách</div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-num">3</div> Xác nhận</div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-num">4</div> Thanh toán</div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="form-card">
+                <form th:action="@{/flight/submit}" method="post" class="row g-4">
+                    <h4 class="section-title"><i class="fas fa-plane"></i> Thông tin chuyến bay</h4>
+                    
+                    <div class="col-md-6">
+                        <label for="from" class="form-label">Nơi đi</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-map-marker-alt text-primary"></i></span>
+                            <input type="text" id="from" name="from" class="form-control border-start-0" placeholder="Ví dụ: TP.HCM" th:value="${prefillFrom}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="to" class="form-label">Nơi đến</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-map-marker-alt text-success"></i></span>
+                            <input type="text" id="to" name="to" class="form-control border-start-0" placeholder="Ví dụ: Hà Nội" th:value="${prefillTo}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="departureDate" class="form-label">Ngày đi</label>
+                        <input type="date" id="departureDate" name="departureDate" class="form-control" th:value="${prefillDepartureDate}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="returnDate" class="form-label">Ngày về (Không bắt buộc)</label>
+                        <input type="date" id="returnDate" name="returnDate" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="passenger" class="form-label">Số hành khách</label>
+                        <input type="number" id="passenger" name="passenger" class="form-control" min="1" value="1" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="classType" class="form-label">Hạng ghế</label>
+                        <select id="classType" name="classType" class="form-select" required>
+                            <option value="economy">Economy (Phổ thông)</option>
+                            <option value="business">Business (Thương gia)</option>
+                            <option value="first">First Class (Hạng nhất)</option>
+                        </select>
+                    </div>
+
+                    <h4 class="section-title mt-5"><i class="fas fa-user"></i> Thông tin người đặt vé</h4>
+                    
+                    <div class="col-md-6">
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Nguyễn Văn A" th:value="${prefillFullName}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email nhận vé</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="a@example.com" th:value="${prefillEmail}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="text" id="phone" name="phone" class="form-control" placeholder="0901234567" th:value="${prefillPhone}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="idCard" class="form-label">CMND/CCCD/Hộ chiếu</label>
+                        <input type="text" id="idCard" name="idCard" class="form-control" placeholder="123456789" required>
+                    </div>
+
+                    <div class="col-12 text-center mt-5">
+                        <button type="submit" class="btn-confirm px-5 py-3">
+                            Tiếp tục: Xác nhận thông tin <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

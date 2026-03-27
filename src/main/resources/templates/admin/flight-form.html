@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${flight.id == null ? 'Thêm chuyến bay' : 'Sửa chuyến bay'}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .sidebar { height: 100vh; background-color: #343a40; color: white; padding-top: 20px; position: fixed; width: inherit; }
+        .sidebar .nav-link { color: #ccc; padding: 12px 20px; transition: all 0.3s ease; border-radius: 8px; margin: 4px 10px; }
+        .sidebar .nav-link:hover { background-color: #495057; color: #fff; transform: translateX(10px); font-weight: bold; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .sidebar .nav-link.active { color: white; background-color: #0d6efd; font-weight: bold; }
+        .main-content { margin-left: 16.666667%; padding: 30px; }
+        .form-hint { font-size: 0.85rem; color: #6c757d; }
+        .swap-btn {
+            width: 56px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #0d6efd;
+        }
+        .swap-btn:hover {
+            border-color: #0d6efd;
+            transform: rotate(180deg);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+        }
+        .select-with-icon { position: relative; }
+        .select-with-icon .form-select { padding-right: 42px; }
+        .select-with-icon i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            pointer-events: none;
+        }
+        .route-wrap {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+            flex-wrap: nowrap;
+        }
+        .route-input {
+            flex: 1 1 0;
+            min-width: 280px;
+        }
+        .route-swap {
+            flex: 0 0 56px;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 sidebar px-0">
+            <div class="text-center mb-4"><h4 class="fw-bold">FlyBooking Admin</h4></div>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin}">📊 Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/admin/flights}">✈️ Quản lý Chuyến bay</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">👥 Quản lý Người dùng</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/bookings}">🎫 Quản lý Đặt chỗ</a></li>
+                <li class="nav-item mt-5"><a class="nav-link text-danger" th:href="@{/logout}">🚪 Đăng xuất</a></li>
+            </ul>
+        </nav>
+
+        <main class="col-md-10 main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0" th:text="${flight.id == null ? 'Thêm chuyến bay mới' : 'Chỉnh sửa chuyến bay'}"></h2>
+                <a th:href="@{/admin/flights}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4" style="max-width: 800px;">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/flights/save}" th:object="${flight}" method="POST" id="adminFlightForm" novalidate>
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Số hiệu chuyến bay</label>
+                                <input type="text" th:field="*{flightNumber}" class="form-control" placeholder="VD: VN123" required>
+                                <div class="form-hint mt-1">Ví dụ: VN123, VJ456</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Giá vé (VNĐ)</label>
+                                <input type="number" th:field="*{price}" class="form-control" min="0" step="1000" required>
+                                <div class="form-hint mt-1">Nhập số, ví dụ: 1500000</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Hãng bay</label>
+                                <select th:field="*{airline}" class="form-select" required>
+                                    <option value="" disabled>Chọn hãng bay</option>
+                                    <option value="Vietnam Airlines">Vietnam Airlines</option>
+                                    <option value="VietJet Air">VietJet Air</option>
+                                    <option value="Bamboo Airways">Bamboo Airways</option>
+                                    <option value="Pacific Airlines">Pacific Airlines</option>
+                                </select>
+                                <div class="form-hint mt-1">Chọn hãng bay, tránh nhầm với ký tự VN/VJ trong số hiệu.</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="route-wrap">
+                                    <div class="route-input">
+                                        <label class="form-label fw-bold">Điểm đi</label>
+                                        <div class="select-with-icon">
+                                            <select th:field="*{origin}" class="form-select" required>
+                                                <option value="" disabled>Chọn sân bay</option>
+                                                <option value="Hà Nội">Hà Nội (HAN)</option>
+                                                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh (SGN)</option>
+                                                <option value="Đà Nẵng">Đà Nẵng (DAD)</option>
+                                                <option value="Nha Trang">Nha Trang (CXR)</option>
+                                                <option value="Phú Quốc">Phú Quốc (PQC)</option>
+                                                <option value="Hải Phòng">Hải Phòng (HPH)</option>
+                                                <option value="Cần Thơ">Cần Thơ (VCA)</option>
+                                                <option value="Huế">Huế (HUI)</option>
+                                            </select>
+                                            <i class="bi bi-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="route-swap">
+                                        <button type="button" class="swap-btn" id="swapOriginDestination" title="Hoán đổi điểm đi/đến">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="route-input">
+                                        <label class="form-label fw-bold">Điểm đến</label>
+                                        <div class="select-with-icon">
+                                            <select th:field="*{destination}" class="form-select" required>
+                                                <option value="" disabled>Chọn sân bay</option>
+                                                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh (SGN)</option>
+                                                <option value="Hà Nội">Hà Nội (HAN)</option>
+                                                <option value="Đà Nẵng">Đà Nẵng (DAD)</option>
+                                                <option value="Nha Trang">Nha Trang (CXR)</option>
+                                                <option value="Phú Quốc">Phú Quốc (PQC)</option>
+                                                <option value="Hải Phòng">Hải Phòng (HPH)</option>
+                                                <option value="Cần Thơ">Cần Thơ (VCA)</option>
+                                                <option value="Huế">Huế (HUI)</option>
+                                            </select>
+                                            <i class="bi bi-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Thời gian khởi hành</label>
+                                <input
+                                        type="datetime-local"
+                                        class="form-control"
+                                        name="departureTime"
+                                        th:value="${flight.departureTime != null ? #temporals.format(flight.departureTime, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                        required
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Thời gian đến</label>
+                                <input
+                                        type="datetime-local"
+                                        class="form-control"
+                                        name="arrivalTime"
+                                        th:value="${flight.arrivalTime != null ? #temporals.format(flight.arrivalTime, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                        required
+                                >
+                                <div class="form-hint mt-1">Thời gian đến phải sau thời gian khởi hành.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Số ghế trống</label>
+                                <input type="number" th:field="*{seatsAvailable}" class="form-control" min="0" step="1" required>
+                            </div>
+                        </div>
+
+                        <div id="adminFlightAlert" class="text-danger small mt-3 d-none">
+                            Điểm đi và điểm đến không được giống nhau.
+                        </div>
+                        <div id="adminTimeAlert" class="text-danger small mt-1 d-none">
+                            Thời gian đến phải sau thời gian khởi hành.
+                        </div>
+
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">Lưu chuyến bay</button>
+                            <a th:href="@{/admin/flights}" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        const form = document.getElementById('adminFlightForm');
+        const alertBox = document.getElementById('adminFlightAlert');
+        const timeAlert = document.getElementById('adminTimeAlert');
+        if (!form) return;
+
+        const swapBtn = document.getElementById('swapOriginDestination');
+        if (swapBtn) {
+            swapBtn.addEventListener('click', function () {
+                const origin = form.querySelector('[name="origin"]');
+                const destination = form.querySelector('[name="destination"]');
+                if (!origin || !destination) return;
+                const temp = origin.value;
+                origin.value = destination.value;
+                destination.value = temp;
+                origin.dispatchEvent(new Event('input', { bubbles: true }));
+                destination.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        }
+
+        function toggleAlert(show) {
+            if (!alertBox) return;
+            if (show) alertBox.classList.remove('d-none');
+            else alertBox.classList.add('d-none');
+        }
+        function toggleTimeAlert(show) {
+            if (!timeAlert) return;
+            if (show) timeAlert.classList.remove('d-none');
+            else timeAlert.classList.add('d-none');
+        }
+
+        function validateOriginDestination() {
+            const origin = form.querySelector('[name="origin"]');
+            const destination = form.querySelector('[name="destination"]');
+            if (!origin || !destination) return true;
+
+            const o = (origin.value || '').trim();
+            const d = (destination.value || '').trim();
+            const ok = !(o && d && o.toLowerCase() === d.toLowerCase());
+            toggleAlert(!ok);
+            return ok;
+        }
+        function validateTimes() {
+            const dep = form.querySelector('[name="departureTime"]');
+            const arr = form.querySelector('[name="arrivalTime"]');
+            if (!dep || !arr || !dep.value || !arr.value) {
+                toggleTimeAlert(false);
+                return true;
+            }
+            const depDate = new Date(dep.value);
+            const arrDate = new Date(arr.value);
+            const ok = arrDate.getTime() > depDate.getTime();
+            toggleTimeAlert(!ok);
+            return ok;
+        }
+
+        form.addEventListener('submit', function (e) {
+            const ok1 = validateOriginDestination();
+            const ok2 = validateTimes();
+            if (!(ok1 && ok2)) {
+                e.preventDefault();
+            }
+        });
+
+        ['[name="origin"]', '[name="destination"]'].forEach((selector) => {
+            const el = form.querySelector(selector);
+            if (!el) return;
+            el.addEventListener('input', validateOriginDestination);
+            el.addEventListener('change', validateOriginDestination);
+        });
+        ['[name="departureTime"]', '[name="arrivalTime"]'].forEach((selector) => {
+            const el = form.querySelector(selector);
+            if (!el) return;
+            el.addEventListener('input', validateTimes);
+            el.addEventListener('change', validateTimes);
+        });
+    })();
+</script>
+</body>
+</html>

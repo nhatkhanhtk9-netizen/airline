@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt chỗ của tôi - FlyBooking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .booking-card {
+            background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px; overflow: hidden; border: 1px solid #eee; transition: all 0.3s ease;
+        }
+        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .card-header-custom {
+            padding: 15px 20px; background: #fdfdfd; border-bottom: 1px solid #f1f1f1;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .status-badge { padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; }
+        .status-paid { background: #d1e7dd; color: #0f5132; }
+        .status-pending { background: #fff3cd; color: #664d03; }
+        .card-body-custom { padding: 20px; }
+        .route-info { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #0d6efd; }
+        .price-total { font-weight: 700; color: #dc3545; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="/index1">✈️ FlyBooking</a>
+            <a href="/index1" class="btn btn-outline-primary btn-sm rounded-pill">Quay lại trang chủ</a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h2 class="fw-bold mb-4">🎫 Đặt chỗ của tôi</h2>
+
+        <!-- Thông báo thành công nếu có -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show rounded-4 mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Danh sách vé máy bay -->
+        <div th:if="${not #lists.isEmpty(flightBookings)}">
+            <div th:each="b : ${flightBookings}" class="booking-card">
+                <div class="card-header-custom">
+                    <div>
+                        <span class="fw-bold text-muted">Mã đơn: </span>
+                        <span class="fw-bold text-primary" th:text="${b.bookingCode != null ? b.bookingCode : '#' + b.id}"></span>
+                    </div>
+                    <span class="status-badge" 
+                          th:classappend="${b.status == 'PAID' ? 'status-paid' : (b.status == 'PENDING' ? 'bg-warning text-dark' : 'status-pending')}"
+                          th:text="${b.status == 'PAID' ? 'Đã thanh toán' : (b.status == 'PENDING' ? 'Chưa thanh toán' : 'Đang chờ phê duyệt')}">
+                    </span>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="route-info" th:text="${b.fromLocation + ' → ' + b.toLocation}"></div>
+                            <div class="text-muted mb-2 small">
+                                <i class="far fa-calendar-alt me-1"></i> Ngày bay: <span th:text="${b.departureDate}"></span> | 
+                                <i class="fas fa-user me-1"></i> <span th:text="${b.fullName}"></span>
+                            </div>
+                            <!-- Nút Thanh toán nếu vé chưa thanh toán -->
+                            <div th:if="${b.status == 'PENDING'}" class="mt-2">
+                                <a th:href="@{/flight/confirm/{id}(id=${b.id})}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                                    <i class="fas fa-credit-card me-1"></i> Thanh toán ngay
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="small text-muted">Tổng cộng</div>
+                            <div class="price-total" th:text="${#numbers.formatDecimal(b.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nếu không có vé nào -->
+        <div th:if="${#lists.isEmpty(flightBookings)}" class="text-center py-5 card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                <p class="text-muted mb-1">Chào bạn, <strong th:text="${currentSearchEmail}"></strong></p>
+                <p class="text-muted">Bạn chưa có đơn đặt chỗ nào trong danh sách chính.</p>
+                <a href="/index1" class="btn btn-primary rounded-pill px-4 mt-2">Đặt vé ngay bây giờ</a>
+            </div>
+        </div>
+
+        <!-- KHU VỰC DEBUG (CHỈ DÀNH CHO BẠN KIỂM TRA) -->
+        <div class="mt-5 p-4 border rounded-4 bg-light" style="opacity: 0.8;">
+            <h5 class="text-secondary"><i class="fas fa-bug me-2"></i>Khu vực Debug (Kiểm tra dữ liệu DB)</h5>
+            <p class="small text-muted">Dưới đây là TOÀN BỘ vé đang có trong database (không phân biệt email):</p>
+            <table class="table table-sm table-hover small">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mã đơn</th>
+                        <th>Email trong DB</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${allDataForDebug}">
+                        <td th:text="${d.id}"></td>
+                        <td th:text="${d.bookingCode}"></td>
+                        <td th:text="${d.email}" class="fw-bold text-danger"></td>
+                        <td th:text="${d.status}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p th:if="${#lists.isEmpty(allDataForDebug)}" class="text-danger fw-bold">DATABASE HIỆN ĐANG TRỐNG RỖNG!</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

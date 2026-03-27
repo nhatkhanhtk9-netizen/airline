@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - FlyBooking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f0f2f5; 
+            color: #1a1a1a;
+        }
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        .payment-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .card-header {
+            background: #ffffff;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 24px;
+        }
+        .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #0d6efd;
+        }
+        .payment-method-item {
+            border: 1.5px solid #eee;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .payment-method-item:hover {
+            border-color: #0d6efd;
+            background-color: #f8f9ff;
+        }
+        .payment-method-item.active {
+            border-color: #0d6efd;
+            background-color: #f0f7ff;
+        }
+        .payment-method-item .check-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            color: #0d6efd;
+            display: none;
+        }
+        .payment-method-item.active .check-icon {
+            display: block;
+        }
+        .payment-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+        }
+        .payment-icon-wrapper img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .booking-summary {
+            background: #ffffff;
+            padding: 24px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .summary-total {
+            border-top: 2px dashed #eee;
+            margin-top: 16px;
+            padding-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #dc3545;
+        }
+        .btn-pay-now {
+            background: linear-gradient(135deg, #0d6efd 0%, #00d2ff 100%);
+            border: none;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 24px;
+            transition: all 0.3s ease;
+        }
+        .btn-pay-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+        .qr-section {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        .qr-code-img {
+            width: 200px;
+            height: 200px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: 20px auto;
+            }
+            .card-header {
+                padding: 16px;
+            }
+            .payment-method-item {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Mini Navbar -->
+<nav class="navbar sticky-top">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold text-primary" href="/">
+            <i class="fas fa-plane-departure me-2"></i>FlyBooking
+        </a>
+        <span class="text-muted small"><i class="fas fa-lock me-1"></i> Thanh toán an toàn</span>
+    </div>
+</nav>
+
+<div class="payment-container">
+    <div class="row">
+        <!-- Cột trái: Phương thức thanh toán -->
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-credit-card me-2"></i>Chọn phương thức thanh toán</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="payment-methods">
+                        <!-- Thẻ quốc tế -->
+                        <div class="payment-method-item active" onclick="selectMethod(this, 'card')">
+                            <i class="fas fa-check-circle check-icon"></i>
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon-wrapper">
+                                    <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Thẻ tín dụng / Ghi nợ</div>
+                                    <div class="small text-muted">Visa, Mastercard, JCB, American Express</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ví MoMo -->
+                        <div class="payment-method-item" onclick="selectMethod(this, 'momo')">
+                            <i class="fas fa-check-circle check-icon"></i>
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon-wrapper">
+                                    <img src="https://img.icons8.com/color/48/momo.png" alt="MoMo">
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Ví điện tử MoMo</div>
+                                    <div class="small text-muted">Thanh toán nhanh qua mã QR MoMo</div>
+                                </div>
+                            </div>
+                            <div id="momo-qr" class="qr-section mt-3">
+                                <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MomoPayment_Booking_' + ${booking.id} + '_Amount_' + ${booking.totalPrice}" class="qr-code-img" alt="QR Code">
+                                <p class="small text-muted mb-0">Quét mã để thanh toán ngay</p>
+                            </div>
+                        </div>
+
+                        <!-- Chuyển khoản -->
+                        <div class="payment-method-item" onclick="selectMethod(this, 'bank')">
+                            <i class="fas fa-check-circle check-icon"></i>
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon-wrapper">
+                                    <img src="https://img.icons8.com/color/48/bank-transfer.png" alt="Bank">
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Chuyển khoản ngân hàng</div>
+                                    <div class="small text-muted">Vietcombank, Techcombank, BIDV...</div>
+                                </div>
+                            </div>
+                            <div id="bank-info" class="qr-section mt-3 text-start p-3 bg-white border border-info-subtle">
+                                <p class="mb-1 small"><strong>Chủ TK:</strong> CONG TY FLYBOOKING</p>
+                                <p class="mb-1 small"><strong>Số TK:</strong> 1234567890</p>
+                                <p class="mb-1 small"><strong>Ngân hàng:</strong> Vietcombank (VCB)</p>
+                                <p class="mb-0 small"><strong>Nội dung:</strong> <span class="text-primary fw-bold" th:text="'FB' + ${booking.id}">FB123</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Tóm tắt đơn hàng -->
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đặt chỗ</h5>
+                </div>
+                <div class="booking-summary">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary text-white rounded-circle p-2 me-3">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold" th:text="${booking.fromLocation + ' → ' + booking.toLocation}">SGN → HAN</div>
+                            <div class="small text-muted" th:text="${booking.departureDate}">25/03/2026</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Hành khách:</span>
+                        <span class="fw-medium" th:text="${booking.passenger + ' người'}">1 người</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Hạng vé:</span>
+                        <span class="fw-medium text-uppercase" th:text="${booking.classType}">Economy</span>
+                    </div>
+
+                    <!-- Dịch vụ bổ sung -->
+                    <div class="summary-row" th:if="${booking.insurance == true}">
+                        <span>Bảo hiểm chuyến bay:</span>
+                        <span class="fw-medium">+ 200,000 đ</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.baggageWeight != null and booking.baggageWeight > 0}">
+                        <span th:text="'Hành lý (' + ${booking.baggageWeight} + 'kg):'">Hành lý:</span>
+                        <span class="fw-medium" th:text="'+ ' + ${#numbers.formatDecimal((booking.baggageWeight / 5) * 100000.0, 0, 'COMMA', 0, 'POINT') + ' đ'}">+ 200,000 đ</span>
+                    </div>
+                    <div class="summary-row text-success" th:if="${booking.discountAmount != null and booking.discountAmount > 0}">
+                        <span>Giảm giá (Voucher):</span>
+                        <span class="fw-bold" th:text="'- ' + ${#numbers.formatDecimal(booking.discountAmount, 0, 'COMMA', 0, 'POINT') + ' đ'}">- 100,000 đ</span>
+                    </div>
+
+                    <!-- Tích điểm -->
+                    <div class="summary-row text-info mt-2">
+                        <span class="fw-bold"><i class="fas fa-coins me-1"></i>Điểm tích lũy:</span>
+                        <span class="fw-bold" th:text="'+ ' + ${#numbers.formatDecimal((booking.pointsEarned != null ? booking.pointsEarned : 0), 0, 'COMMA', 0, 'POINT')}">+ 1,500</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Mã đặt chỗ:</span>
+                        <span class="fw-bold text-primary" th:text="'#' + ${booking.id}">#123</span>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Tổng cộng:</span>
+                        <span th:text="${#numbers.formatDecimal(booking.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1.500.000 VNĐ</span>
+                    </div>
+
+                    <form th:action="@{/flight/pay-request/{id}(id=${booking.id})}" method="post">
+                        <button type="submit" class="btn-pay-now">
+                            <i class="fas fa-shield-alt me-2"></i>Gửi yêu cầu thanh toán
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="small text-muted mb-0">Bằng cách nhấn thanh toán, bạn đồng ý với <a href="/terms" class="text-decoration-none">Điều khoản & Điều kiện</a> của FlyBooking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotional Banner -->
+            <div class="card bg-primary text-white p-4 text-center border-0 shadow-sm">
+                <h6 class="fw-bold mb-2">Tải ngay App FlyBooking</h6>
+                <p class="small opacity-75 mb-3">Nhận ngay Voucher giảm 50k cho lần đặt đầu tiên trên ứng dụng!</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="30" alt="Google Play">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" height="30" alt="App Store">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectMethod(element, method) {
+        // Remove active class from all items
+        document.querySelectorAll('.payment-method-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Hide all extra sections
+        document.getElementById('momo-qr').style.display = 'none';
+        document.getElementById('bank-info').style.display = 'none';
+
+        // Add active class to selected item
+        element.classList.add('active');
+
+        // Show specific section if needed
+        if (method === 'momo') {
+            document.getElementById('momo-qr').style.display = 'block';
+        } else if (method === 'bank') {
+            document.getElementById('bank-info').style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
