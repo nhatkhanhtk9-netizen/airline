@@ -20,14 +20,27 @@ public class BookingKSController {
 
     // Hiển thị form qua đường dẫn /hotels hoặc /bookingKS/form
     @GetMapping({"/hotels", "/bookingKS/form"})
-    public String showForm(Model model) {
-        model.addAttribute("bookingKS", new BookingKS());
+    public String showForm(HttpSession session, Model model) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+        
+        BookingKS bookingKS = new BookingKS();
+        bookingKS.setFullName(loggedInUser.getFullName());
+        bookingKS.setEmail(loggedInUser.getEmail());
+        bookingKS.setPhone(loggedInUser.getPhone());
+        
+        model.addAttribute("bookingKS", bookingKS);
         return "bookingKSForm"; // Tên file HTML
     }
 
     // Xử lý submit form và hiển thị kết quả tìm kiếm
     @PostMapping("/bookingKS/submit")
-    public String submitForm(@ModelAttribute BookingKS bookingKS, Model model) {
+    public String submitForm(@ModelAttribute BookingKS bookingKS, HttpSession session, Model model) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         bookingKSRepository.save(bookingKS);
         if (bookingKS.getEmail() != null && !bookingKS.getEmail().isBlank()) {
             String cleanEmail = bookingKS.getEmail().trim().toLowerCase();

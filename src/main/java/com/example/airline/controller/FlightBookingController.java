@@ -31,6 +31,11 @@ public class FlightBookingController {
 
     @GetMapping("/form")
     public String showForm(@RequestParam(required = false) Long flightId, HttpSession session, Model model) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
         if (flightId != null) {
             flightRepository.findById(flightId).ifPresent(flight -> {
                 model.addAttribute("prefillFrom", flight.getOrigin());
@@ -39,12 +44,9 @@ public class FlightBookingController {
             });
         }
         
-        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
-        if (loggedInUser != null) {
-            model.addAttribute("prefillFullName", loggedInUser.getFullName());
-            model.addAttribute("prefillEmail", loggedInUser.getEmail());
-            model.addAttribute("prefillPhone", loggedInUser.getPhone());
-        }
+        model.addAttribute("prefillFullName", loggedInUser.getFullName());
+        model.addAttribute("prefillEmail", loggedInUser.getEmail());
+        model.addAttribute("prefillPhone", loggedInUser.getPhone());
         
         return "flightBookingForm";
     }
@@ -61,8 +63,12 @@ public class FlightBookingController {
             @RequestParam String email,
             @RequestParam String phone,
             @RequestParam String idCard,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         System.out.println(">>> [CONTROLLER] Received submission from: " + fullName + " (" + email + ")");
         
         try {
@@ -121,7 +127,10 @@ public class FlightBookingController {
     }
 
     @GetMapping("/confirm/{id}")
-    public String showConfirmPage(@PathVariable Long id, Model model) {
+    public String showConfirmPage(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         FlightBooking booking = flightBookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đặt vé"));
         model.addAttribute("booking", booking);
@@ -134,8 +143,12 @@ public class FlightBookingController {
             @RequestParam(required = false, defaultValue = "false") boolean insurance,
             @RequestParam(required = false, defaultValue = "0") int baggageWeight,
             @RequestParam(required = false) String voucherCode,
+            HttpSession session,
             Model model
     ) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         FlightBooking booking = flightBookingRepository.findById(id).orElseThrow();
         booking.setInsurance(insurance);
         booking.setBaggageWeight(baggageWeight);
@@ -175,7 +188,10 @@ public class FlightBookingController {
 
     // Xử lý thanh toán thành công
     @PostMapping("/pay-request/{id}")
-    public String payRequest(@PathVariable Long id, Model model) {
+    public String payRequest(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         FlightBooking booking = flightBookingRepository.findById(id).orElseThrow();
         booking.setStatus("PAYMENT_PENDING");
         flightBookingRepository.save(booking);
