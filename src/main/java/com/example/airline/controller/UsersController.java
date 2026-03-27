@@ -78,15 +78,25 @@ public class UsersController {
                             Model model) {
 
         String lowerEmail = email != null ? email.trim().toLowerCase() : "";
+        System.out.println(">>> Login Attempt: " + lowerEmail);
+        
         Users user = usersRepository.findByEmailIgnoreCase(lowerEmail);
-        if (user != null && user.getPassword() != null && passwordEncoder.matches(password, user.getPassword())) {
+        if (user == null) {
+            System.out.println(">>> Login Failed: User not found for email " + lowerEmail);
+            model.addAttribute("error", "Email không tồn tại!");
+            return "login";
+        }
+
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            System.out.println(">>> Login Success: " + lowerEmail + (user.isAdmin() ? " (Admin)" : " (User)"));
             session.setAttribute("loggedInUser", user);
             if (user.isAdmin()) {
                 return "redirect:/admin";
             }
             return "redirect:/index1";
         } else {
-            model.addAttribute("error", "Email hoặc mật khẩu không đúng!");
+            System.out.println(">>> Login Failed: Wrong password for " + lowerEmail);
+            model.addAttribute("error", "Mật khẩu không chính xác!");
             return "login";
         }
     }

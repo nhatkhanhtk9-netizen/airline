@@ -84,12 +84,23 @@ public class AdminController {
                              @RequestParam String password,
                              HttpSession session,
                              Model model) {
-        Users user = usersRepository.findByEmailIgnoreCase(email);
-        if (user != null && user.isAdmin() && passwordEncoder.matches(password, user.getPassword())) {
-            session.setAttribute("loggedInUser", user);
-            return "redirect:/admin";
+        String lowerEmail = email != null ? email.trim().toLowerCase() : "";
+        System.out.println(">>> Admin Login Attempt: " + lowerEmail);
+        
+        Users user = usersRepository.findByEmailIgnoreCase(lowerEmail);
+        if (user != null && user.isAdmin()) {
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                System.out.println(">>> Admin Login Success: " + lowerEmail);
+                session.setAttribute("loggedInUser", user);
+                return "redirect:/admin";
+            } else {
+                System.out.println(">>> Admin Login Failed: Wrong password for " + lowerEmail);
+                model.addAttribute("error", "Mật khẩu quản trị không đúng!");
+                return "admin/login";
+            }
         } else {
-            model.addAttribute("error", "Email hoặc mật khẩu quản trị không đúng!");
+            System.out.println(">>> Admin Login Failed: Not an admin or user not found: " + lowerEmail);
+            model.addAttribute("error", "Email quản trị không tồn tại hoặc không có quyền!");
             return "admin/login";
         }
     }

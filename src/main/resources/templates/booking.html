@@ -24,6 +24,17 @@
         .card-body-custom { padding: 20px; }
         .route-info { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #0d6efd; }
         .price-total { font-weight: 700; color: #dc3545; font-size: 1.2rem; }
+
+        @media (max-width: 768px) {
+            .container { padding-left: 15px; padding-right: 15px; }
+            .card-header-custom { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .status-badge { align-self: flex-start; }
+            .price-total { font-size: 1.1rem; margin-top: 10px; }
+            .text-md-end { text-align: left !important; margin-top: 15px; border-top: 1px dashed #eee; padding-top: 10px; }
+            .navbar-brand { font-size: 1.2rem; }
+            .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
+            .table-responsive { border: 0; }
+        }
     </style>
 </head>
 <body>
@@ -92,9 +103,9 @@
         </div>
 
         <!-- KHU VỰC DEBUG (CHỈ DÀNH CHO BẠN KIỂM TRA) -->
-        <div class="mt-5 p-4 border rounded-4 bg-light" style="opacity: 0.8;">
-            <h5 class="text-secondary"><i class="fas fa-bug me-2"></i>Khu vực Debug (Kiểm tra dữ liệu DB)</h5>
-            <p class="small text-muted">Dưới đây là TOÀN BỘ vé đang có trong database (không phân biệt email):</p>
+        <div class="mt-5 p-4 border rounded-4 bg-light table-responsive" style="opacity: 0.8;">
+            <h5 class="text-secondary"><i class="fas fa-bug me-2"></i>Khu vực Debug</h5>
+            <p class="small text-muted">Dưới đây là TOÀN BỘ vé đang có trong database:</p>
             <table class="table table-sm table-hover small">
                 <thead>
                     <tr>

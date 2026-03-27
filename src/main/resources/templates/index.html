@@ -12,9 +12,49 @@
             transition: height 0.3s ease;
         }
 
+        /* --- MOBILE OPTIMIZATIONS --- */
         @media (max-width: 768px) {
             .logo {
                 height: 40px;
+            }
+            .navbar-brand {
+                margin-right: 0;
+            }
+            .navbar-collapse {
+                background: white;
+                padding: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                margin-top: 10px;
+            }
+            .sticky-menu {
+                overflow-x: auto;
+                justify-content: flex-start !important;
+                white-space: nowrap;
+                padding: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .service-search-sticky .nav-link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.85rem;
+            }
+            .hero-section {
+                padding: 2rem 0;
+            }
+            .support-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            .footer-main {
+                padding-top: 2rem;
+            }
+            .payment-partners {
+                gap: 5px;
+            }
+            .payment-logo {
+                height: 20px;
             }
         }
 

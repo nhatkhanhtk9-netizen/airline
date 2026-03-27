@@ -126,6 +126,22 @@
                 backdrop-filter: none;
             }
 
+            /* --- HEADER MOBILE --- */
+            .header-container {
+                padding: 10px !important;
+            }
+            .header-logo-text {
+                font-size: 1.1rem !important;
+            }
+            .btn-back-home {
+                padding: 4px 10px;
+                font-size: 0.75rem;
+                gap: 4px;
+            }
+            .btn-back-home i {
+                font-size: 0.9rem;
+            }
+
             .sticky-menu {
                 width: 100% !important;
                 justify-content: flex-start;
@@ -156,6 +172,26 @@
             .service-form {
                 padding: 15px;
                 border-radius: 12px;
+            }
+
+            /* Form Row Mobile Fix */
+            .form-row-mobile {
+                flex-wrap: wrap !important;
+            }
+            .form-row-mobile .col, 
+            .form-row-mobile .col-auto {
+                flex: 0 0 50% !important;
+                width: 50% !important;
+                max-width: 50% !important;
+                margin-bottom: 10px;
+            }
+            .form-row-mobile .col-auto.px-0 {
+                display: none; /* Hide swap button on mobile row to save space */
+            }
+            .form-row-mobile .col-auto[style*="width: 80px"] {
+                flex: 0 0 100% !important;
+                width: 100% !important;
+                max-width: 100% !important;
             }
 
             /* Flight Card Mobile */
@@ -198,10 +234,14 @@
                 font-size: 1.2rem;
                 margin-bottom: 0;
             }
-
+            
             .btn-book {
-                padding: 8px 20px;
+                padding: 6px 20px;
+                font-size: 0.9rem;
             }
+            
+            h2.fw-bold { font-size: 1.5rem !important; }
+            .btn-back-home { font-size: 0.8rem; padding: 4px 10px; }
         }
 
         /* FORM CONTAINER - Cần cố định độ rộng ở giữa */
@@ -552,14 +592,14 @@
 <body>
 
 <!-- HEADER -->
-<div class="container-fluid bg-white shadow-sm py-2 px-4 mb-3">
+<div class="container-fluid bg-white shadow-sm py-2 px-2 px-md-4 mb-3 header-container">
     <div class="d-flex justify-content-between align-items-center">
         <a href="/index1" class="d-flex align-items-center text-decoration-none">
-            <img src="/images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
-            <span class="h4 mb-0 fw-bold text-primary">FlyBooking</span>
+            <img src="/images/logo.png" alt="Logo" style="height: 30px; margin-right: 8px;" class="mobile-logo-img">
+            <span class="h5 mb-0 fw-bold text-primary header-logo-text">FlyBooking</span>
         </a>
         <a href="/index1" class="btn-back-home">
-            <span>🏠</span> Quay lại trang chủ
+            <span>🏠</span> <span class="d-none d-sm-inline">Quay lại trang chủ</span><span class="d-inline d-sm-none">Trang chủ</span>
         </a>
     </div>
 
@@ -611,7 +651,7 @@
                     <label><input type="radio" name="flyTrip" value="round" id="roundTrip"> Khứ hồi</label>
                 </div>
 
-                <div class="row g-2 align-items-end flex-nowrap">
+                <div class="row g-2 align-items-end flex-nowrap form-row-mobile">
                     <div class="col">
                         <label class="small fw-bold">Điểm đi</label>
                         <div class="select-wrapper">
