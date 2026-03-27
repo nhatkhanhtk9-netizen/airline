@@ -39,6 +39,12 @@ public class GeneralController {
         this.companyInfoRepository = companyInfoRepository;
     }
 
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("flights", flightRepository.findAll());
+        return "index";
+    }
+
     @GetMapping("/promotions")
     public String promotions() {
         return "index";
