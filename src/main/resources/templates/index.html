@@ -457,9 +457,6 @@
             <div class="collapse navbar-collapse" id="topMenu">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
 
-                    <li class="nav-item">
-                        <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
-                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/my-booking">Đặt chỗ của tôi</a>
@@ -787,11 +784,11 @@ document.getElementById('flightFormSticky').classList.add('active-form');
                 <!-- Cột 3: Liên kết công ty -->
                 <div class="col-lg-2 col-md-6">
                     <h5 class="footer-title">Công ty</h5>
-                    <a href="/about" class="footer-link">Giới thiệu</a>
-                    <a href="/news" class="footer-link">Tin tức</a>
-                    <a href="/careers" class="footer-link">Tuyển dụng</a>
-                    <a href="/terms" class="footer-link">Điều khoản</a>
-                    <a href="/privacy" class="footer-link">Chính sách bảo mật</a>
+                    <a th:href="@{/about}" class="footer-link">Giới thiệu</a>
+                    <a th:href="@{/news}" class="footer-link">Tin tức</a>
+                    <a th:href="@{/careers}" class="footer-link">Tuyển dụng</a>
+                    <a th:href="@{/terms}" class="footer-link">Điều khoản</a>
+                    <a th:href="@{/privacy}" class="footer-link">Chính sách bảo mật</a>
                 </div>
 
                 <!-- Cột 4: Tải app & Theo dõi -->
