@@ -94,6 +94,18 @@
             text-decoration: underline;
         }
 
+        .home-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #999;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .home-link:hover {
+            color: #666;
+        }
+
         @media (max-width: 576px) {
             body { padding: 20px 0; }
             .register-card {
@@ -152,6 +164,8 @@
         <div class="login-link">
             Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a>
         </div>
+        
+        <a th:href="@{/}" class="home-link">← Quay về trang chủ</a>
     </div>
 </div>
 
