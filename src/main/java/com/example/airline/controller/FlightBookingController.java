@@ -1,5 +1,6 @@
 package com.example.airline.controller;
 
+import com.example.airline.model.Flight;
 import com.example.airline.model.FlightBooking;
 import com.example.airline.model.Users;
 import com.example.airline.repository.FlightRepository;

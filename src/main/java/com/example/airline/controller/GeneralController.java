@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -101,6 +103,10 @@ public class GeneralController {
 
     @GetMapping("/search")
     public String search(@RequestParam(name = "query", required = false) String query) {
-        return "redirect:/flights?search=" + query;
+        if (query == null || query.isBlank()) {
+            return "redirect:/flights";
+        }
+        String encoded = UriUtils.encodeQueryParam(query.trim(), StandardCharsets.UTF_8);
+        return "redirect:/flights?search=" + encoded;
     }
 }
