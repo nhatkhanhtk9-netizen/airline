@@ -102,11 +102,15 @@ public class GeneralController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(name = "query", required = false) String query) {
+    public String search(@RequestParam(name = "query", required = false) String query,
+                         @RequestParam(name = "type", required = false) String type) {
         if (query == null || query.isBlank()) {
             return "redirect:/flights";
         }
         String encoded = UriUtils.encodeQueryParam(query.trim(), StandardCharsets.UTF_8);
+        if (type != null && type.equalsIgnoreCase("hotel")) {
+            return "redirect:/hotels?query=" + encoded;
+        }
         return "redirect:/flights?search=" + encoded;
     }
 }

@@ -25,7 +25,9 @@ public class BookingKSController {
 
     // Hiển thị form qua đường dẫn /hotels hoặc /bookingKS/form
     @GetMapping({"/hotels", "/bookingKS/form"})
-    public String showForm(HttpSession session, Model model) {
+    public String showForm(@RequestParam(name = "query", required = false) String query,
+                           HttpSession session,
+                           Model model) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return "redirect:/login";
@@ -37,6 +39,12 @@ public class BookingKSController {
         bookingKS.setPhone(loggedInUser.getPhone());
         
         model.addAttribute("bookingKS", bookingKS);
+        model.addAttribute("loggedInUser", loggedInUser);
+        if (query != null && !query.isBlank()) {
+            model.addAttribute("searchQuery", query.trim());
+            model.addAttribute("booking", bookingKS);
+            return "hotelResults";
+        }
         return "bookingKSForm"; // Tên file HTML
     }
 
