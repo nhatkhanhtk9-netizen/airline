@@ -880,7 +880,9 @@
                         <div class="price" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">1.200.000 VNĐ</div>
                         <div class="text-muted small">/người</div>
                     </div>
-                    <a th:href="@{/flight/form(flightId=${flight.id})}" class="btn-book">Đặt vé</a>
+                    <form th:action="@{/flight/quick-book/{id}(id=${flight.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn-book">Đặt vé</button>
+                    </form>
                 </div>
             </div>
         </div>

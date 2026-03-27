@@ -126,6 +126,42 @@ public class FlightBookingController {
         }
     }
 
+    @PostMapping("/quick-book/{id}")
+    public String quickBook(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            Flight flight = flightRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy chuyến bay"));
+
+            FlightBooking booking = new FlightBooking();
+            booking.setFromLocation(flight.getOrigin());
+            booking.setToLocation(flight.getDestination());
+            booking.setDepartureDate(flight.getDepartureTime().toLocalDate().toString());
+            booking.setPassenger(1); // Mặc định 1 khách cho đặt nhanh
+            booking.setClassType("Phổ thông");
+            booking.setFullName(loggedInUser.getFullName());
+            booking.setEmail(loggedInUser.getEmail());
+            booking.setPhone(loggedInUser.getPhone());
+            booking.setIdCard("Chưa cập nhật");
+            booking.setStatus("PENDING");
+            booking.setTotalPrice(flight.getPrice());
+
+            FlightBooking savedBooking = flightBookingRepository.save(booking);
+            String code = String.format("FB%06d", savedBooking.getId());
+            savedBooking.setBookingCode(code);
+            flightBookingRepository.save(savedBooking);
+
+            return "redirect:/flight/confirm/" + savedBooking.getId();
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi đặt vé nhanh: " + e.getMessage());
+            return "redirect:/flights";
+        }
+    }
+
     @GetMapping("/confirm/{id}")
     public String showConfirmPage(@PathVariable Long id, HttpSession session, Model model) {
         if (session.getAttribute("loggedInUser") == null) {

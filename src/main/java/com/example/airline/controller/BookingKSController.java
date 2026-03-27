@@ -39,32 +39,53 @@ public class BookingKSController {
     // Xử lý submit form và hiển thị kết quả tìm kiếm
     @PostMapping("/bookingKS/submit")
     public String submitForm(@ModelAttribute BookingKS bookingKS, HttpSession session, Model model) {
-        if (session.getAttribute("loggedInUser") == null) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
             return "redirect:/login";
         }
         bookingKSRepository.save(bookingKS);
-        if (bookingKS.getEmail() != null && !bookingKS.getEmail().isBlank()) {
-            String cleanEmail = bookingKS.getEmail().trim().toLowerCase();
-            Users existing = usersRepository.findByEmailIgnoreCase(cleanEmail);
-            if (existing == null) {
-                Users u = new Users();
-                u.setFullName(bookingKS.getFullName());
-                u.setEmail(cleanEmail);
-                u.setPhone(bookingKS.getPhone());
-                u.setAdmin(false);
-                u.setPassword(null);
-                usersRepository.save(u);
-            } else {
-                if ((existing.getFullName() == null || existing.getFullName().isBlank()) && bookingKS.getFullName() != null) {
-                    existing.setFullName(bookingKS.getFullName());
-                }
-                if ((existing.getPhone() == null || existing.getPhone().isBlank()) && bookingKS.getPhone() != null) {
-                    existing.setPhone(bookingKS.getPhone());
-                }
-                usersRepository.save(existing);
-            }
-        }
+        
+        // Mocking some hotel results for demonstration
         model.addAttribute("booking", bookingKS);
+        model.addAttribute("loggedInUser", loggedInUser);
         return "hotelResults"; // Chuyển sang trang kết quả tìm kiếm
+    }
+
+    @GetMapping("/hotel/detail/{id}")
+    public String hotelDetail(@PathVariable String id, HttpSession session, Model model) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
+        // Mock data for hotel detail based on ID
+        Map<String, Object> hotel = new HashMap<>();
+        if ("1".equals(id)) {
+            hotel.put("name", "Nature Hotel - Le Hong Phong");
+            hotel.put("imageUrl", "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800");
+            hotel.put("stars", 4);
+            hotel.put("ratingCount", 73);
+            hotel.put("ratingValue", 8.7);
+            hotel.put("location", "Phường 4, Đà Lạt");
+            hotel.put("price", 406536.0);
+            hotel.put("description", "Khách sạn tọa lạc tại vị trí đắc địa, không gian sang trọng và hiện đại, dịch vụ đẳng cấp quốc tế.");
+            hotel.put("pros", List.of("Vị trí trung tâm, dễ di chuyển", "Gần nhiều quán ăn ngon", "Phòng ốc sạch sẽ, mới"));
+            hotel.put("cons", List.of("Thường xuyên hết phòng vào cuối tuần", "Tiếng ồn từ phố vào ban đêm"));
+        } else {
+            hotel.put("name", "The Luxe Hotel Dalat");
+            hotel.put("imageUrl", "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800");
+            hotel.put("stars", 3);
+            hotel.put("ratingCount", 1400);
+            hotel.put("ratingValue", 8.5);
+            hotel.put("location", "Phường 3, Đà Lạt");
+            hotel.put("price", 405800.0);
+            hotel.put("description", "Khách sạn phong cách tân cổ điển, mang lại trải nghiệm ấm cúng và sang trọng giữa lòng Đà Lạt.");
+            hotel.put("pros", List.of("Kiến trúc đẹp, sang trọng", "Giá cả hợp lý", "Nhân viên nhiệt tình"));
+            hotel.put("cons", List.of("Không gian hơi hẹp", "Wifi đôi khi không ổn định"));
+        }
+
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("loggedInUser", loggedInUser);
+        return "hotel-detail";
     }
 }
