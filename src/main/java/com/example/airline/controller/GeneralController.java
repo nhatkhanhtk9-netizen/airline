@@ -2,10 +2,12 @@ package com.example.airline.controller;
 
 import com.example.airline.model.Booking;
 import com.example.airline.model.BookingKS;
+import com.example.airline.model.CompanyInfo;
 import com.example.airline.model.FlightBooking;
 import com.example.airline.model.Users;
 import com.example.airline.repository.BookingKSRepository;
 import com.example.airline.repository.BookingRepository;
+import com.example.airline.repository.CompanyInfoRepository;
 import com.example.airline.repository.FlightBookingRepository;
 import com.example.airline.repository.FlightRepository;
 import jakarta.servlet.http.HttpSession;
@@ -23,15 +25,18 @@ public class GeneralController {
     private final FlightBookingRepository flightBookingRepository;
     private final BookingRepository bookingRepository;
     private final BookingKSRepository bookingKSRepository;
+    private final CompanyInfoRepository companyInfoRepository;
 
     public GeneralController(FlightRepository flightRepository, 
                              FlightBookingRepository flightBookingRepository,
                              BookingRepository bookingRepository,
-                             BookingKSRepository bookingKSRepository) {
+                             BookingKSRepository bookingKSRepository,
+                             CompanyInfoRepository companyInfoRepository) {
         this.flightRepository = flightRepository;
         this.flightBookingRepository = flightBookingRepository;
         this.bookingRepository = bookingRepository;
         this.bookingKSRepository = bookingKSRepository;
+        this.companyInfoRepository = companyInfoRepository;
     }
 
     @GetMapping("/promotions")
@@ -99,41 +104,39 @@ public class GeneralController {
         return "index";
     }
 
+    // Helper method to get company info
+    private String getCompanyPage(String type, Model model) {
+        CompanyInfo info = companyInfoRepository.findByType(type)
+                .orElse(new CompanyInfo(type, "Nội dung đang cập nhật", "Vui lòng quay lại sau."));
+        model.addAttribute("title", info.getTitle());
+        model.addAttribute("content", info.getContent());
+        return "company-info";
+    }
+
     @GetMapping("/about")
     public String about(Model model) {
-        model.addAttribute("title", "Giới thiệu về FlyBooking");
-        model.addAttribute("content", "FlyBooking là nền tảng đặt vé máy bay và khách sạn hàng đầu tại Việt Nam. Chúng tôi cam kết mang đến trải nghiệm du lịch tuyệt vời nhất với giá cả cạnh tranh.");
-        return "company-info";
+        return getCompanyPage("about", model);
     }
 
     @GetMapping("/news")
     public String news(Model model) {
-        model.addAttribute("title", "Tin tức Du lịch");
-        model.addAttribute("content", "Cập nhật những thông tin mới nhất về các chuyến bay, khuyến mãi khách sạn và xu hướng du lịch trên thế giới.");
-        return "company-info";
+        return getCompanyPage("news", model);
     }
 
     @GetMapping("/careers")
     public String careers(Model model) {
-        model.addAttribute("title", "Cơ hội nghề nghiệp");
-        model.addAttribute("content", "Hãy gia nhập đội ngũ FlyBooking để cùng nhau xây dựng tương lai của ngành du lịch số. Chúng tôi luôn tìm kiếm những tài năng đam mê và sáng tạo.");
-        return "company-info";
+        return getCompanyPage("careers", model);
     }
 
     @GetMapping("/terms")
     public String terms(Model model) {
-        model.addAttribute("title", "Điều khoản sử dụng");
-        model.addAttribute("content", "Bằng việc sử dụng dịch vụ của FlyBooking, bạn đồng ý với các điều khoản và điều kiện được quy định nhằm đảm bảo quyền lợi cho cả hai bên.");
-        return "company-info";
+        return getCompanyPage("terms", model);
     }
 
     @GetMapping("/privacy")
     public String privacy(Model model) {
-        model.addAttribute("title", "Chính sách bảo mật");
-        model.addAttribute("content", "FlyBooking cam kết bảo vệ thông tin cá nhân của bạn một cách tuyệt đối. Chúng tôi sử dụng các công nghệ bảo mật tiên tiến nhất để giữ an toàn dữ liệu.");
-        return "company-info";
+        return getCompanyPage("privacy", model);
     }
-}
 
     @GetMapping("/partnership")
     public String partnership() {
