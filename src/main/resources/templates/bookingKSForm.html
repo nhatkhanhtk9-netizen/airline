@@ -320,30 +320,42 @@
             .booking-card .row.g-0 {
                 flex-direction: column;
             }
+            .booking-card .col-md-5 {
+                display: none !important; /* Ẩn ảnh bên trái hoàn toàn trên mobile */
+            }
             .booking-card .col-md-7 {
                 width: 100%;
             }
             .booking-card .card-body {
-                padding: 15px !important;
+                padding: 20px 15px !important;
             }
             .booking-card .row.mb-3, .booking-card .row.g-3 {
-                flex-direction: column;
+                display: block !important; /* Chuyển row thành block để các cột xuống dòng */
                 margin-bottom: 0 !important;
             }
             .booking-card .col-md-6 {
-                width: 100%;
-                margin-bottom: 15px;
+                width: 100% !important;
+                margin-bottom: 15px !important;
+                padding: 0 !important;
             }
-            .booking-card .rounded-pill {
-                border-radius: 12px !important; /* Less pill-shaped on mobile for better space */
+            .booking-card .form-control, .booking-card .form-select {
+                height: 50px !important; /* Tăng chiều cao để dễ chạm */
+                font-size: 16px !important; /* Android yêu cầu font >= 16px để không bị tự động zoom */
+                border-radius: 10px !important;
+                padding: 10px 15px !important;
             }
             .booking-card label {
-                font-size: 0.85rem;
-                margin-bottom: 4px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                margin-bottom: 6px;
+                display: block;
+                color: #333;
             }
             .booking-card .btn-lg {
-                padding: 12px !important;
-                font-size: 1rem !important;
+                height: 55px !important;
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                border-radius: 10px !important;
             }
         }
         @media (max-width: 576px) {
