@@ -316,47 +316,61 @@
             .slider-container { padding: 0 10px; }
             .slider-nav { width: 35px; height: 35px; font-size: 1rem; }
             
-            /* Hotel Search Form Mobile Fix */
+            /* Hotel Search Form Mobile Fix - MATCHING SCREENSHOT */
             .booking-card .row.g-0 {
-                flex-direction: column;
+                flex-direction: row !important; /* Giữ 2 cột */
+                display: flex !important;
             }
             .booking-card .col-md-5 {
-                display: none !important; /* Ẩn ảnh bên trái hoàn toàn trên mobile */
+                display: block !important;
+                flex: 0 0 40% !important; /* Ảnh chiếm 40% */
+                max-width: 40% !important;
             }
             .booking-card .col-md-7 {
-                width: 100%;
+                flex: 0 0 60% !important; /* Form chiếm 60% */
+                max-width: 60% !important;
             }
             .booking-card .card-body {
-                padding: 20px 15px !important;
+                padding: 10px !important;
             }
             .booking-card .row.mb-3, .booking-card .row.g-3 {
-                display: block !important; /* Chuyển row thành block để các cột xuống dòng */
-                margin-bottom: 0 !important;
+                display: flex !important; /* Cho phép các cột nằm cạnh nhau */
+                flex-direction: row !important;
+                margin-bottom: 8px !important;
+                gap: 5px;
             }
             .booking-card .col-md-6 {
-                width: 100% !important;
-                margin-bottom: 15px !important;
-                padding: 0 !important;
+                flex: 1 !important;
+                width: 50% !important;
+                margin-bottom: 0 !important;
+                padding: 0 2px !important;
             }
             .booking-card .form-control, .booking-card .form-select {
-                height: 50px !important; /* Tăng chiều cao để dễ chạm */
-                font-size: 16px !important; /* Android yêu cầu font >= 16px để không bị tự động zoom */
-                border-radius: 10px !important;
-                padding: 10px 15px !important;
+                height: 35px !important; /* Thu nhỏ chiều cao để vừa màn hình */
+                font-size: 13px !important;
+                padding: 5px 10px !important;
+                border-radius: 15px !important;
             }
             .booking-card label {
-                font-size: 0.9rem;
-                font-weight: 600;
-                margin-bottom: 6px;
-                display: block;
-                color: #333;
+                font-size: 11px !important;
+                margin-bottom: 2px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .booking-card .btn-lg {
-                height: 55px !important;
-                font-size: 1.1rem !important;
-                font-weight: 700 !important;
-                border-radius: 10px !important;
+                height: 40px !important;
+                font-size: 14px !important;
+                padding: 5px !important;
+                margin-bottom: 5px !important;
             }
+            .btn-outline-secondary {
+                background: white !important;
+                color: #6c757d !important;
+                border: 1px solid #ddd !important;
+            }
+            h1.display-4 { font-size: 1.8rem !important; }
+            p.lead { font-size: 0.9rem !important; }
         }
         @media (max-width: 576px) {
             .slider-item { flex: 0 0 100%; }
