@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/bookingKS")
 public class BookingKSController {
 
     @Autowired
@@ -19,15 +18,15 @@ public class BookingKSController {
     @Autowired
     private UsersRepository usersRepository;
 
-    // Hiển thị form
-    @GetMapping("/form")
+    // Hiển thị form qua đường dẫn /hotels hoặc /bookingKS/form
+    @GetMapping({"/hotels", "/bookingKS/form"})
     public String showForm(Model model) {
         model.addAttribute("bookingKS", new BookingKS());
         return "bookingKSForm"; // Tên file HTML
     }
 
     // Xử lý submit form và hiển thị kết quả tìm kiếm
-    @PostMapping("/submit")
+    @PostMapping("/bookingKS/submit")
     public String submitForm(@ModelAttribute BookingKS bookingKS, Model model) {
         bookingKSRepository.save(bookingKS);
         if (bookingKS.getEmail() != null && !bookingKS.getEmail().isBlank()) {

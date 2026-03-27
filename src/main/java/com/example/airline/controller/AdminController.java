@@ -1,7 +1,15 @@
 package com.example.airline.controller;
 
-import com.example.airline.model.*;
-import com.example.airline.repository.*;
+import com.example.airline.model.Booking;
+import com.example.airline.model.BookingKS;
+import com.example.airline.model.Flight;
+import com.example.airline.model.FlightBooking;
+import com.example.airline.model.Users;
+import com.example.airline.repository.BookingKSRepository;
+import com.example.airline.repository.BookingRepository;
+import com.example.airline.repository.FlightBookingRepository;
+import com.example.airline.repository.FlightRepository;
+import com.example.airline.repository.UsersRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -24,7 +32,6 @@ public class AdminController {
     private final BookingKSRepository bookingKSRepository;
     private final BookingRepository bookingRepository;
     private final FlightRepository flightRepository;
-    private final CompanyInfoRepository companyInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
     private final String mailFrom;
@@ -36,7 +43,6 @@ public class AdminController {
             BookingKSRepository bookingKSRepository,
             BookingRepository bookingRepository,
             FlightRepository flightRepository,
-            CompanyInfoRepository companyInfoRepository,
             PasswordEncoder passwordEncoder,
             JavaMailSender mailSender,
             @Value("${spring.mail.username:}") String mailFrom,
@@ -47,7 +53,6 @@ public class AdminController {
         this.bookingKSRepository = bookingKSRepository;
         this.bookingRepository = bookingRepository;
         this.flightRepository = flightRepository;
-        this.companyInfoRepository = companyInfoRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.mailFrom = mailFrom;
@@ -365,28 +370,5 @@ public class AdminController {
         if (!isAdmin(session)) return "redirect:/admin/login";
         bookingRepository.deleteById(id);
         return "redirect:/admin/bookings";
-    }
-
-    // --- QUẢN LÝ THÔNG TIN CÔNG TY ---
-    @GetMapping("/company")
-    public String manageCompanyInfo(HttpSession session, Model model) {
-        if (!isAdmin(session)) return "redirect:/admin/login";
-        model.addAttribute("companyInfos", companyInfoRepository.findAll());
-        return "admin/company-manage";
-    }
-
-    @GetMapping("/company/edit/{id}")
-    public String editCompanyInfo(@PathVariable Long id, HttpSession session, Model model) {
-        if (!isAdmin(session)) return "redirect:/admin/login";
-        companyInfoRepository.findById(id).ifPresent(info -> model.addAttribute("info", info));
-        return "admin/company-edit";
-    }
-
-    @PostMapping("/company/update")
-    public String updateCompanyInfo(@ModelAttribute CompanyInfo info, HttpSession session, RedirectAttributes ra) {
-        if (!isAdmin(session)) return "redirect:/admin/login";
-        companyInfoRepository.save(info);
-        ra.addFlashAttribute("message", "Cập nhật thông tin thành công!");
-        return "redirect:/admin/company";
     }
 }

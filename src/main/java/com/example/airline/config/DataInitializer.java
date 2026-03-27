@@ -1,10 +1,8 @@
 package com.example.airline.config;
 
-import com.example.airline.model.CompanyInfo;
 import com.example.airline.model.Flight;
 import com.example.airline.model.FlightBooking;
 import com.example.airline.model.Users;
-import com.example.airline.repository.CompanyInfoRepository;
 import com.example.airline.repository.FlightBookingRepository;
 import com.example.airline.repository.FlightRepository;
 import com.example.airline.repository.UsersRepository;
@@ -20,18 +18,15 @@ public class DataInitializer implements CommandLineRunner {
     private final UsersRepository usersRepository;
     private final FlightRepository flightRepository;
     private final FlightBookingRepository flightBookingRepository;
-    private final CompanyInfoRepository companyInfoRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(UsersRepository usersRepository, 
                            FlightRepository flightRepository, 
                            FlightBookingRepository flightBookingRepository,
-                           CompanyInfoRepository companyInfoRepository,
                            PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.flightRepository = flightRepository;
         this.flightBookingRepository = flightBookingRepository;
-        this.companyInfoRepository = companyInfoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -98,21 +93,6 @@ public class DataInitializer implements CommandLineRunner {
             sample.setBookingCode("SAMPLE001");
             flightBookingRepository.save(sample);
             System.out.println(">>> Created Sample Booking for: nhatkhanhtk9@gmail.com");
-        }
-
-        // Initialize Company Info if empty
-        if (companyInfoRepository.count() == 0) {
-            companyInfoRepository.save(new CompanyInfo("about", "Giới thiệu về FlyBooking", 
-                "FlyBooking là nền tảng đặt vé máy bay và khách sạn hàng đầu tại Việt Nam. Chúng tôi cam kết mang đến trải nghiệm du lịch tuyệt vời nhất với giá cả cạnh tranh."));
-            companyInfoRepository.save(new CompanyInfo("news", "Tin tức Du lịch", 
-                "Cập nhật những thông tin mới nhất về các chuyến bay, khuyến mãi khách sạn và xu hướng du lịch trên thế giới."));
-            companyInfoRepository.save(new CompanyInfo("careers", "Cơ hội nghề nghiệp", 
-                "Hãy gia nhập đội ngũ FlyBooking để cùng nhau xây dựng tương lai của ngành du lịch số. Chúng tôi luôn tìm kiếm những tài năng đam mê và sáng tạo."));
-            companyInfoRepository.save(new CompanyInfo("terms", "Điều khoản sử dụng", 
-                "Bằng việc sử dụng dịch vụ của FlyBooking, bạn đồng ý với các điều khoản và điều kiện được quy định nhằm đảm bảo quyền lợi cho cả hai bên."));
-            companyInfoRepository.save(new CompanyInfo("privacy", "Chính sách bảo mật", 
-                "FlyBooking cam kết bảo vệ thông tin cá nhân của bạn một cách tuyệt đối. Chúng tôi sử dụng các công nghệ bảo mật tiên tiến nhất để giữ an toàn dữ liệu."));
-            System.out.println(">>> Initialized Company Info records.");
         }
     }
 }

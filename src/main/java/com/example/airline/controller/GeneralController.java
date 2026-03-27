@@ -2,12 +2,10 @@ package com.example.airline.controller;
 
 import com.example.airline.model.Booking;
 import com.example.airline.model.BookingKS;
-import com.example.airline.model.CompanyInfo;
 import com.example.airline.model.FlightBooking;
 import com.example.airline.model.Users;
 import com.example.airline.repository.BookingKSRepository;
 import com.example.airline.repository.BookingRepository;
-import com.example.airline.repository.CompanyInfoRepository;
 import com.example.airline.repository.FlightBookingRepository;
 import com.example.airline.repository.FlightRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,24 +23,15 @@ public class GeneralController {
     private final FlightBookingRepository flightBookingRepository;
     private final BookingRepository bookingRepository;
     private final BookingKSRepository bookingKSRepository;
-    private final CompanyInfoRepository companyInfoRepository;
 
     public GeneralController(FlightRepository flightRepository, 
                              FlightBookingRepository flightBookingRepository,
                              BookingRepository bookingRepository,
-                             BookingKSRepository bookingKSRepository,
-                             CompanyInfoRepository companyInfoRepository) {
+                             BookingKSRepository bookingKSRepository) {
         this.flightRepository = flightRepository;
         this.flightBookingRepository = flightBookingRepository;
         this.bookingRepository = bookingRepository;
         this.bookingKSRepository = bookingKSRepository;
-        this.companyInfoRepository = companyInfoRepository;
-    }
-
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("flights", flightRepository.findAll());
-        return "index";
     }
 
     @GetMapping("/promotions")
@@ -85,11 +74,6 @@ public class GeneralController {
         return "redirect:/my-booking";
     }
 
-    @GetMapping("/hotels")
-    public String hotels() {
-        return "bookingKSForm";
-    }
-
     @GetMapping("/trains")
     public String trains() {
         return "index";
@@ -108,40 +92,6 @@ public class GeneralController {
     @GetMapping("/car-rental")
     public String carRental() {
         return "index";
-    }
-
-    // Helper method to get company info
-    private String getCompanyPage(String type, Model model) {
-        CompanyInfo info = companyInfoRepository.findByType(type)
-                .orElse(new CompanyInfo(type, "Nội dung đang cập nhật", "Vui lòng quay lại sau."));
-        model.addAttribute("title", info.getTitle());
-        model.addAttribute("content", info.getContent());
-        return "company-info";
-    }
-
-    @GetMapping("/about")
-    public String about(Model model) {
-        return getCompanyPage("about", model);
-    }
-
-    @GetMapping("/news")
-    public String news(Model model) {
-        return getCompanyPage("news", model);
-    }
-
-    @GetMapping("/careers")
-    public String careers(Model model) {
-        return getCompanyPage("careers", model);
-    }
-
-    @GetMapping("/terms")
-    public String terms(Model model) {
-        return getCompanyPage("terms", model);
-    }
-
-    @GetMapping("/privacy")
-    public String privacy(Model model) {
-        return getCompanyPage("privacy", model);
     }
 
     @GetMapping("/partnership")

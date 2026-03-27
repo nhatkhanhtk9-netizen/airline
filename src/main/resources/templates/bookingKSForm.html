@@ -304,19 +304,9 @@
         @media (max-width: 992px) {
             .slider-item { flex: 0 0 calc(50% - 10px); }
         }
-        @media (max-width: 768px) {
-            .container { padding-left: 10px; padding-right: 10px; margin-top: 20px !important; }
-            h1.display-4 { font-size: 2rem !important; }
-            p.lead { font-size: 1rem !important; }
-            .card-body { padding: 20px !important; }
-            .form-control, .form-select, .btn { font-size: 0.9rem !important; }
-            .section-title { font-size: 1.5rem !important; }
-            .city-tag { padding: 8px 15px; font-size: 0.85rem; }
-            .promo-banner { height: 150px; }
-            .slider-container { padding: 0 10px; }
-            .slider-nav { width: 35px; height: 35px; font-size: 1rem; }
-            
-            /* Tối ưu hóa giao diện di động cho sự hài hòa và chuyên nghiệp */
+        @media (max-width: 576px) {
+            .slider-item { flex: 0 0 100%; }
+            /* Tối ưu hóa giao diện di động cho sự hài hòa và chuyên nghiệp - PHIÊN BẢN DỌC */
             .booking-card .row.g-0 {
                 flex-direction: column !important; /* Luôn xếp dọc trên mobile */
                 display: flex !important;
@@ -325,17 +315,17 @@
                 display: block !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                height: 180px !important; /* Ảnh nằm trên cùng, chiều cao vừa phải */
+                height: 200px !important; /* Ảnh nằm trên cùng */
             }
             .booking-card .col-md-7 {
                 width: 100% !important;
                 max-width: 100% !important;
             }
             .booking-card .card-body {
-                padding: 25px 20px !important; /* Tăng khoảng cách cho thoáng */
+                padding: 25px 20px !important;
             }
             .booking-card .row.mb-3, .booking-card .row.g-3 {
-                display: block !important; /* Xếp dọc các ô nhập liệu */
+                display: block !important; /* Mỗi ô một hàng */
                 margin-bottom: 0 !important;
             }
             .booking-card .col-md-6 {
@@ -344,35 +334,25 @@
                 padding: 0 !important;
             }
             .booking-card .form-control, .booking-card .form-select {
-                height: 48px !important; /* Chiều cao chuẩn để dễ thao tác */
-                font-size: 16px !important; /* Chống auto-zoom trên mobile */
+                height: 50px !important; /* Cao vừa đủ để chạm */
+                font-size: 16px !important; /* Tránh auto-zoom */
                 border-radius: 12px !important;
                 padding: 10px 15px !important;
-                border: 1px solid #ddd !important;
             }
             .booking-card label {
-                font-size: 14px !important; /* Font chữ nhãn rõ ràng */
+                font-size: 14px !important;
                 font-weight: 600 !important;
                 margin-bottom: 6px !important;
-                color: #444 !important;
+                display: block;
             }
             .booking-card .btn-lg {
-                height: 50px !important;
+                height: 55px !important;
                 font-size: 16px !important;
                 font-weight: 700 !important;
                 border-radius: 12px !important;
-                margin-bottom: 10px !important;
             }
-            .btn-outline-secondary {
-                background: #f8f9fa !important;
-                border: 1px solid #ddd !important;
-                color: #666 !important;
-            }
-            h1.display-4 { font-size: 1.8rem !important; margin-bottom: 5px !important; }
-            p.lead { font-size: 0.95rem !important; margin-bottom: 20px !important; }
-        }
-        @media (max-width: 576px) {
-            .slider-item { flex: 0 0 100%; }
+            h1.display-4 { font-size: 2rem !important; }
+            p.lead { font-size: 1rem !important; }
         }
     </style>
 </head>
