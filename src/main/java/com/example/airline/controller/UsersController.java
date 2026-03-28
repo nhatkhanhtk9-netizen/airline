@@ -179,4 +179,52 @@ public class UsersController {
         model.addAttribute("error", "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.");
         return "login";
     }
+
+    // --- TRANG CÁ NHÂN ---
+
+    @GetMapping("/profile")
+    public String showProfile(HttpSession session, Model model) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+        
+        // Reload user from database to ensure fresh data
+        Users user = usersRepository.findById(loggedInUser.getId()).orElse(null);
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@RequestParam String fullName,
+                                @RequestParam String phone,
+                                @RequestParam(required = false) String newPassword,
+                                @RequestParam(required = false) String confirmPassword,
+                                HttpSession session,
+                                Model model) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
+        Users user = usersRepository.findById(loggedInUser.getId()).orElseThrow();
+        user.setFullName(fullName);
+        user.setPhone(phone);
+
+        if (newPassword != null && !newPassword.isBlank()) {
+            if (!newPassword.equals(confirmPassword)) {
+                model.addAttribute("user", user);
+                model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+                return "profile";
+            }
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+        usersRepository.save(user);
+        session.setAttribute("loggedInUser", user); // Update session data
+        
+        model.addAttribute("user", user);
+        model.addAttribute("message", "Cập nhật thông tin thành công!");
+        return "profile";
+    }
 }

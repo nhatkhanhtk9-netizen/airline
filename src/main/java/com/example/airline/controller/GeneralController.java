@@ -43,9 +43,11 @@ public class GeneralController {
 
     @GetMapping("/index1")
     public String index1(HttpSession session, Model model) {
-        if (session.getAttribute("loggedInUser") == null) {
+        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
             return "redirect:/login";
         }
+        model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("flights", flightRepository.findAll());
         return "index1";
     }

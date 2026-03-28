@@ -137,6 +137,34 @@
         .service-menu .nav-link:hover {
             color: #0d6efd;
         }
+        
+        /* User Avatar Navbar */
+        .user-avatar-nav {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #0d6efd, #00d2ff);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+        }
+        .nav-profile-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px !important;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .nav-profile-link:hover {
+            background-color: rgba(13, 110, 253, 0.08);
+            transform: translateY(-1px);
+        }
+
         .dropdown:hover>.dropdown-menu {
             display: block;
             margin-top: 0;
@@ -922,6 +950,14 @@
                             <li><a class="dropdown-item" href="?currency=EUR">EUR</a></li>
                             <li><a class="dropdown-item" href="?currency=VND">VND</a></li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-profile-link" th:href="@{/profile}">
+                            <div class="user-avatar-nav">
+                                <span th:text="${#strings.substring(loggedInUser.fullName, 0, 1)}">U</span>
+                            </div>
+                            <span class="fw-bold text-dark d-none d-xl-inline" th:text="${loggedInUser.fullName}">User Name</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger fw-bold" th:href="@{/logout}">Đăng xuất</a>
