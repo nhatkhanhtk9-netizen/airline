@@ -3,148 +3,73 @@
 <head>
     <style th:fragment="header-styles">
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #00d2ff;
-            --dark-text: #333;
-            --light-bg: #f8f9fa;
+            --primary-color: #0061f2; /* Xanh đậm hơn chuyên nghiệp */
+            --secondary-color: #00cfd5;
+            --dark-text: #1a202c;
+            --light-bg: #ffffff;
+            --accent-blue: #e0eaff;
         }
 
         /* --- Header Container --- */
         .navbar-top {
-            background: white;
-            border-bottom: 1px solid #eee;
-            padding: 0.6rem 0;
+            background: #ffffff;
+            border-bottom: 2px solid var(--accent-blue);
+            padding: 0.8rem 0;
         }
 
         /* --- Logo --- */
-        .navbar-brand img {
-            height: 38px;
-            object-fit: contain;
-        }
         .brand-text {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary-color) !important;
+            -webkit-text-fill-color: initial;
+            background: none;
         }
 
         /* --- Search Bar --- */
-        .search-wrapper {
-            position: relative;
-            max-width: 450px;
-            width: 100%;
-        }
         .search-input {
-            border-radius: 50px !important;
+            border-radius: 12px !important;
             padding-left: 20px !important;
-            border: 1.5px solid #e0e0e0 !important;
-            height: 42px !important;
-            font-size: 0.9rem !important;
-            transition: all 0.3s ease !important;
+            border: 2px solid var(--accent-blue) !important;
+            background: #f8fbff !important;
+            height: 46px !important;
         }
         .search-input:focus {
+            background: #ffffff !important;
             border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
-        }
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 50px !important;
-            height: 34px !important;
-            width: 34px !important;
-            padding: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary-color) !important;
-            border: none !important;
-        }
-
-        /* --- Nav Items --- */
-        .nav-link-custom {
-            font-weight: 600;
-            color: #555 !important;
-            font-size: 0.85rem;
-            transition: color 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .nav-link-custom:hover {
-            color: var(--primary-color) !important;
-        }
-
-        /* --- User Profile in Navbar --- */
-        .user-nav-box {
-            background: #f0f7ff;
-            padding: 4px 12px 4px 6px;
-            border-radius: 50px;
-            border: 1px solid #e1efff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            text-decoration: none !important;
-        }
-        .user-nav-box:hover {
-            background: #e1efff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .user-avatar-nav {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
-        }
-        .user-avatar-nav img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .user-name-nav {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--dark-text);
-            max-width: 120px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         /* --- Service Menu (Bar 2) --- */
         .service-nav-bar {
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            padding: 8px 0;
+            background: var(--primary-color);
+            padding: 0;
         }
         .service-link {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #666 !important;
-            padding: 6px 15px !important;
-            border-radius: 10px;
-            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff !important;
+            padding: 12px 20px !important;
+            border-radius: 0;
+            transition: background 0.2s;
         }
         .service-link:hover {
-            background: rgba(13, 110, 253, 0.05);
-            color: var(--primary-color) !important;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff !important;
         }
-        .service-link i {
-            margin-right: 6px;
-            font-size: 1rem;
+        .service-link.active {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- User Profile --- */
+        .user-nav-box {
+            background: var(--accent-blue);
+            border: none;
+        }
+        .user-nav-box:hover {
+            background: #ccdfff;
+        }
+        .user-avatar-nav {
+            background: var(--primary-color);
         }
 
         /* --- Promo Button --- */
