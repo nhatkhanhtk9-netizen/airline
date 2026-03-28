@@ -2,192 +2,271 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <style th:fragment="header-styles">
-        /* User Avatar Navbar */
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #00d2ff;
+            --dark-text: #333;
+            --light-bg: #f8f9fa;
+        }
+
+        /* --- Header Container --- */
+        .navbar-top {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 0.6rem 0;
+        }
+
+        /* --- Logo --- */
+        .navbar-brand img {
+            height: 38px;
+            object-fit: contain;
+        }
+        .brand-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Search Bar --- */
+        .search-wrapper {
+            position: relative;
+            max-width: 450px;
+            width: 100%;
+        }
+        .search-input {
+            border-radius: 50px !important;
+            padding-left: 20px !important;
+            border: 1.5px solid #e0e0e0 !important;
+            height: 42px !important;
+            font-size: 0.9rem !important;
+            transition: all 0.3s ease !important;
+        }
+        .search-input:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
+        }
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50px !important;
+            height: 34px !important;
+            width: 34px !important;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color) !important;
+            border: none !important;
+        }
+
+        /* --- Nav Items --- */
+        .nav-link-custom {
+            font-weight: 600;
+            color: #555 !important;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .nav-link-custom:hover {
+            color: var(--primary-color) !important;
+        }
+
+        /* --- User Profile in Navbar --- */
+        .user-nav-box {
+            background: #f0f7ff;
+            padding: 4px 12px 4px 6px;
+            border-radius: 50px;
+            border: 1px solid #e1efff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+        }
+        .user-nav-box:hover {
+            background: #e1efff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
         .user-avatar-nav {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(45deg, #0d6efd, #00d2ff);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+            font-size: 14px;
+            font-weight: 700;
             overflow: hidden;
+            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
         }
         .user-avatar-nav img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .nav-profile-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 5px 12px !important;
+        .user-name-nav {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --- Service Menu (Bar 2) --- */
+        .service-nav-bar {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            padding: 8px 0;
+        }
+        .service-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666 !important;
+            padding: 6px 15px !important;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .service-link:hover {
+            background: rgba(13, 110, 253, 0.05);
+            color: var(--primary-color) !important;
+        }
+        .service-link i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+        /* --- Promo Button --- */
+        .btn-promo {
+            background: #fff9e6;
+            color: #d97706 !important;
+            border: 1px solid #fde68a;
+            font-size: 0.8rem;
+            font-weight: 700;
             border-radius: 50px;
-            transition: all 0.3s ease;
+            padding: 5px 15px !important;
         }
-        .nav-profile-link:hover {
-            background-color: rgba(13, 110, 253, 0.08);
-            transform: translateY(-1px);
+        .btn-promo:hover {
+            background: #fef3c7;
         }
-        .promo-btn {
-            background-color: #ffc107;
-            color: #212529;
-            font-weight: 500;
-            border-radius: 5px;
-            padding: 6px 12px;
-            transition: 0.3s;
-        }
-        .promo-btn:hover {
-            background-color: #e0a800;
-            color: white;
-        }
-        .hamburger-line {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background-color: #0d6efd;
-            border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-        .navbar-toggler {
-            border: none !important;
-            padding: 0.5rem;
-            background: transparent !important;
-            box-shadow: none !important;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 45px;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-        }
-        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-        .navbar-toggler[aria-expanded="true"] .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-        
-        .service-menu {
-            background-color: #f8f9fa;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .service-menu .nav-link {
-            color: #333;
-            font-weight: 500;
-        }
-        .service-menu .nav-link:hover {
-            color: #0d6efd;
+
+        @media (max-width: 991.98px) {
+            .search-wrapper { max-width: 100%; margin: 10px 0; }
+            .user-nav-box { margin-top: 10px; }
         }
     </style>
 </head>
 <body>
 
 <div th:fragment="header">
-    <!-- THANH 1: Logo + Tìm kiếm + Nút chức năng -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-2">
-        <div class="container-fluid">
+    <!-- BAR 1: Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-top">
+        <div class="container">
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/images/logo.png" alt="Logo" class="logo me-2" style="height: 40px;">
-                <span class="fw-bold text-primary">FlyBooking</span>
+            <a class="navbar-brand d-flex align-items-center me-4" href="/">
+                <img src="/images/logo.png" alt="FlyBooking">
+                <span class="brand-text ms-2">FlyBooking</span>
             </a>
 
-            <!-- Thanh tìm kiếm (Desktop) -->
-            <form class="d-none d-lg-flex mx-auto" style="max-width: 500px; width: 100%;" action="/search" method="get">
-                <div class="input-group">
-                    <input class="form-control border-end-0" type="search" name="query" placeholder="Tìm chuyến bay, khách sạn, điểm đến..." aria-label="Search" style="border-radius: 20px 0 0 20px;">
-                    <button class="btn btn-primary" type="submit" style="border-radius: 0 20px 20px 0;">
-                        🔍
+            <!-- Search Bar (Desktop) -->
+            <div class="d-none d-lg-block flex-grow-1 mx-4">
+                <form action="/search" method="get" class="search-wrapper">
+                    <input type="text" name="query" class="form-control search-input" placeholder="Tìm chuyến bay, khách sạn, điểm đến...">
+                    <button class="btn btn-primary search-btn" type="submit">
+                        <i class="bi bi-search"></i>
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
 
-            <!-- Toggle cho mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topMenu"
-                    aria-controls="topMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
+            <!-- Mobile Toggler -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <i class="bi bi-list fs-2 text-primary"></i>
             </button>
 
-            <!-- Menu bên phải -->
-            <div class="collapse navbar-collapse" id="topMenu">
-                <!-- Thanh tìm kiếm (Mobile) -->
-                <form class="d-flex d-lg-none w-100 mt-2" action="/search" method="get">
-                    <div class="input-group">
-                        <input class="form-control border-end-0" type="search" name="query" placeholder="Tìm chuyến bay, khách sạn..." aria-label="Search" style="border-radius: 20px 0 0 20px;">
-                        <button class="btn btn-primary" type="submit" style="border-radius: 0 20px 20px 0;">
-                            🔍
+            <!-- Menu items -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- Search Bar (Mobile) -->
+                <div class="d-lg-none mt-3 mb-2">
+                    <form action="/search" method="get" class="search-wrapper w-100">
+                        <input type="text" name="query" class="form-control search-input" placeholder="Tìm kiếm...">
+                        <button class="btn btn-primary search-btn" type="submit">
+                            <i class="bi bi-search"></i>
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
 
-                <ul class="navbar-nav ms-auto align-items-center gap-2 mt-2 mt-lg-0">
+                <ul class="navbar-nav ms-auto align-items-center gap-lg-3">
                     <li class="nav-item">
-                        <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
+                        <a href="/promotions" class="nav-link nav-link-custom btn-promo">
+                            <i class="bi bi-gift-fill"></i> Khuyến mãi
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-booking">Đặt chỗ của tôi</a>
+                        <a class="nav-link nav-link-custom" href="/my-booking">
+                            <i class="bi bi- suitcase-lg-fill"></i> Đặt chỗ
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            VNĐ
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="currencyDropdown">
-                            <li><a class="dropdown-item" href="?currency=VND">VNĐ</a></li>
-                            <li><a class="dropdown-item" href="?currency=USD">USD</a></li>
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" data-bs-toggle="dropdown">VNĐ</a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                            <li><a class="dropdown-item small" href="?currency=VND">VNĐ - Vietnam Dong</a></li>
+                            <li><a class="dropdown-item small" href="?currency=USD">USD - US Dollar</a></li>
                         </ul>
                     </li>
 
-                    <!-- Khi đã đăng nhập -->
+                    <!-- User Section -->
                     <th:block th:if="${session.loggedInUser != null}">
                         <li class="nav-item">
-                            <a class="nav-link nav-profile-link" th:href="@{/profile}">
+                            <a th:href="@{/profile}" class="user-nav-box">
                                 <div class="user-avatar-nav">
                                     <img th:if="${session.loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${session.loggedInUser.profileImage}}" alt="Avatar">
                                     <span th:if="${session.loggedInUser.profileImage == null}" th:text="${#strings.substring(session.loggedInUser.fullName, 0, 1)}">U</span>
                                 </div>
-                                <span class="fw-bold text-dark d-none d-xl-inline" th:text="${session.loggedInUser.fullName}">User</span>
+                                <span class="user-name-nav" th:text="${session.loggedInUser.fullName}">User Name</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-danger fw-bold" th:href="@{/logout}">Đăng xuất</a>
+                            <a class="nav-link text-danger small fw-bold" th:href="@{/logout}">Đăng xuất</a>
                         </li>
                     </th:block>
 
-                    <!-- Khi chưa đăng nhập -->
                     <th:block th:if="${session.loggedInUser == null}">
                         <li class="nav-item">
-                            <a class="btn btn-success btn-sm" href="/login">Đăng nhập</a>
+                            <a class="btn btn-primary btn-sm rounded-pill px-3" href="/login">Đăng nhập</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-primary btn-sm" href="/register">Đăng ký</a>
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="/register">Đăng ký</a>
                         </li>
                     </th:block>
-                </ul>
-            </div>  
-        </div>
-    </nav>
-
-    <!-- THANH 2: Menu dịch vụ dùng chung -->
-    <nav class="navbar navbar-expand-lg service-menu">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse show" id="serviceMenu2">
-                <ul class="navbar-nav align-items-center justify-content-center gap-3 w-100">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/flights}">✈️ Vé Máy Bay</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/hotels">🏨 Khách sạn</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/trains">🚆 Tàu hỏa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/buses">🚌 Xe khách</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/activities">🎫 Trải nghiệm</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/car-rental">🚗 Thuê xe</a></li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- BAR 2: Service Menu -->
+    <div class="service-nav-bar d-none d-lg-block">
+        <div class="container">
+            <ul class="nav justify-content-center gap-2">
+                <li><a th:href="@{/flights}" class="nav-link service-link"><i class="bi bi-airplane"></i> Vé Máy Bay</a></li>
+                <li><a href="/hotels" class="nav-link service-link"><i class="bi bi-building"></i> Khách sạn</a></li>
+                <li><a href="/trains" class="nav-link service-link"><i class="bi bi-train-front"></i> Tàu hỏa</a></li>
+                <li><a href="/buses" class="nav-link service-link"><i class="bi bi-bus-front"></i> Xe khách</a></li>
+                <li><a href="/activities" class="nav-link service-link"><i class="bi bi-ticket-perforated"></i> Trải nghiệm</a></li>
+                <li><a href="/car-rental" class="nav-link service-link"><i class="bi bi-car-front"></i> Thuê xe</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 </body>
