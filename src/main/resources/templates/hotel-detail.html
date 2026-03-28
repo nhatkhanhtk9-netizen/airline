@@ -92,13 +92,17 @@
                     <div class="current-price" th:text="${#numbers.formatDecimal(hotel.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">406.536 VND</div>
                     <p class="mb-0 text-success small fw-bold"><i class="bi bi-check-all"></i> Miễn phí hủy phòng</p>
                 </div>
-                <form th:action="@{/bookingKS/submit}" method="post">
-                    <!-- Giữ lại thông tin search cũ nếu có -->
-                    <input type="hidden" name="fullName" th:value="${loggedInUser.fullName}">
-                    <input type="hidden" name="email" th:value="${loggedInUser.email}">
-                    <input type="hidden" name="phone" th:value="${loggedInUser.phone}">
-                    <button type="submit" class="btn btn-primary btn-book-now shadow">Đặt phòng ngay</button>
-                </form>
+                <div th:if="${loggedInUser != null}">
+                    <form th:action="@{/bookingKS/submit}" method="post">
+                        <input type="hidden" name="fullName" th:value="${loggedInUser.fullName}">
+                        <input type="hidden" name="email" th:value="${loggedInUser.email}">
+                        <input type="hidden" name="phone" th:value="${loggedInUser.phone}">
+                        <button type="submit" class="btn btn-primary btn-book-now shadow">Đặt phòng ngay</button>
+                    </form>
+                </div>
+                <div th:if="${loggedInUser == null}">
+                    <a href="/login" class="btn btn-primary btn-book-now shadow">Đăng nhập để đặt phòng</a>
+                </div>
             </div>
         </div>
     </div>

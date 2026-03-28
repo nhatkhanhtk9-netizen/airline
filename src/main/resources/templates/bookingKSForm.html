@@ -358,6 +358,7 @@
 </head>
 <body>
 <div class="background-overlay"></div>
+<div id="hotelSearchQuery" th:if="${searchQuery}" th:attr="data-q=${searchQuery}" style="display:none;"></div>
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
@@ -447,6 +448,15 @@
     <!-- Phần Ưu đãi quốc tế -->
     <div class="mt-5">
         <h3 class="section-title">Ưu đãi quốc tế</h3>
+        <div th:if="${searchQuery}" class="alert alert-info rounded-pill py-2 px-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                Kết quả tìm kiếm: <strong th:text="${searchQuery}">...</strong>
+            </div>
+            <a href="/hotels" class="btn btn-sm btn-outline-primary rounded-pill">Xóa</a>
+        </div>
+        <div id="noHotelMatch" class="alert alert-warning rounded-pill py-2 px-3 d-none">
+            Không tìm thấy khách sạn phù hợp. Hãy thử từ khóa khác.
+        </div>
         <div class="mb-4">
             <a href="#" class="city-tag active">Bangkok</a>
             <a href="#" class="city-tag">Singapore</a>
@@ -668,6 +678,45 @@
             });
         }
     }
+
+    (function () {
+        const holder = document.getElementById('hotelSearchQuery');
+        if (!holder) return;
+        const qRaw = holder.getAttribute('data-q') || '';
+        const q = qRaw.trim();
+        if (!q) return;
+
+        const normalize = (s) => (s || '')
+            .toString()
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        const nq = normalize(q);
+        const items = Array.from(document.querySelectorAll('#hotelSlider .slider-item'));
+        let visible = 0;
+
+        items.forEach((item) => {
+            const nameEl = item.querySelector('.hotel-name');
+            const badgeEl = item.querySelector('.location-badge');
+            const text = normalize((nameEl ? nameEl.textContent : '') + ' ' + (badgeEl ? badgeEl.textContent : ''));
+            const ok = text.includes(nq);
+            item.style.display = ok ? '' : 'none';
+            if (ok) visible += 1;
+        });
+
+        const emptyEl = document.getElementById('noHotelMatch');
+        if (emptyEl) {
+            emptyEl.classList.toggle('d-none', visible !== 0);
+        }
+
+        const slider = document.getElementById('hotelSlider');
+        if (slider) {
+            slider.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+    })();
 </script>
 </body>
 </html>

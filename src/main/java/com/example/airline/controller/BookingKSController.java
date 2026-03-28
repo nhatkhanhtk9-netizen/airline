@@ -29,21 +29,18 @@ public class BookingKSController {
                            HttpSession session,
                            Model model) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/login";
-        }
-        
+
         BookingKS bookingKS = new BookingKS();
-        bookingKS.setFullName(loggedInUser.getFullName());
-        bookingKS.setEmail(loggedInUser.getEmail());
-        bookingKS.setPhone(loggedInUser.getPhone());
+        if (loggedInUser != null) {
+            bookingKS.setFullName(loggedInUser.getFullName());
+            bookingKS.setEmail(loggedInUser.getEmail());
+            bookingKS.setPhone(loggedInUser.getPhone());
+        }
         
         model.addAttribute("bookingKS", bookingKS);
         model.addAttribute("loggedInUser", loggedInUser);
         if (query != null && !query.isBlank()) {
             model.addAttribute("searchQuery", query.trim());
-            model.addAttribute("booking", bookingKS);
-            return "hotelResults";
         }
         return "bookingKSForm"; // Tên file HTML
     }
@@ -66,9 +63,6 @@ public class BookingKSController {
     @GetMapping("/hotel/detail/{id}")
     public String hotelDetail(@PathVariable String id, HttpSession session, Model model) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/login";
-        }
 
         // Mock data for hotel detail based on ID
         Map<String, Object> hotel = new HashMap<>();

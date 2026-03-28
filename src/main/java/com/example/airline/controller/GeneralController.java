@@ -107,8 +107,22 @@ public class GeneralController {
         if (query == null || query.isBlank()) {
             return "redirect:/flights";
         }
-        String encoded = UriUtils.encodeQueryParam(query.trim(), StandardCharsets.UTF_8);
-        if (type != null && type.equalsIgnoreCase("hotel")) {
+        String normalizedType = type != null ? type.trim() : "";
+        String cleanedQuery = query.trim();
+        String lowered = cleanedQuery.toLowerCase();
+        if (normalizedType.isBlank() && (lowered.contains("khách sạn") || lowered.contains("hotel"))) {
+            normalizedType = "hotel";
+            cleanedQuery = cleanedQuery
+                    .replaceAll("(?i)khách\\s*sạn", " ")
+                    .replaceAll("(?i)hotel", " ")
+                    .trim();
+            if (cleanedQuery.isBlank()) {
+                cleanedQuery = query.trim();
+            }
+        }
+
+        String encoded = UriUtils.encodeQueryParam(cleanedQuery, StandardCharsets.UTF_8);
+        if (normalizedType.equalsIgnoreCase("hotel")) {
             return "redirect:/hotels?query=" + encoded;
         }
         return "redirect:/flights?search=" + encoded;
