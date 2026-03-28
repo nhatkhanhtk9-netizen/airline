@@ -281,7 +281,7 @@
 /* Menu link */
 .service-search-sticky .nav-link {
     font-weight: 500;
-    color: #333;
+    color: #444;
     transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     align-items: center;
@@ -293,18 +293,18 @@
 
 /* Hover: đổi xanh + scale + shadow nổi nhẹ */
 .service-search-sticky .nav-link:hover {
-    color: #0d6efd;
+    color: #00BFFF;
     transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25); /* shadow nổi nhẹ */
-    background-color: rgba(13, 110, 253, 0.05); /* nền nhạt */
+    box-shadow: 0 6px 15px rgba(0, 191, 255, 0.25); /* shadow nổi nhẹ */
+    background-color: rgba(0, 191, 255, 0.05); /* nền nhạt */
 }
 
 /* Active: giữ màu xanh + scale + shadow nổi */
 .service-search-sticky .nav-link.active {
-    color: #0d6efd;
+    color: #00BFFF;
     transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25); /* shadow nổi nhẹ */
-    background-color: rgba(13, 110, 253, 0.08);
+    box-shadow: 0 6px 15px rgba(0, 191, 255, 0.25); /* shadow nổi nhẹ */
+    background-color: rgba(0, 191, 255, 0.08);
 }
 /* Form nổi dưới menu */
 .service-form-sticky {
@@ -318,12 +318,13 @@
     background: #ffffff;
     padding: 1rem;
     border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 191, 255, 0.15);
     opacity: 0;
     transform: translateX(100%);
     transition: transform 0.6s cubic-bezier(0.77,0,0.175,1), opacity 0.5s ease;
     width: 100%;
     z-index: 1;
+    border: 1px solid #e1f5fe;
 }
 
 .service-form-sticky.active-form {

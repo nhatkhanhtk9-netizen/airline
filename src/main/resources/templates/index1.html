@@ -261,18 +261,18 @@
         }
 
         .service-search-sticky .nav-link:hover {
-            color: #0d6efd;
+            color: #00BFFF;
             transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25);
-            background-color: rgba(13, 110, 253, 0.05);
+            box-shadow: 0 6px 15px rgba(0, 191, 255, 0.25);
+            background-color: rgba(0, 191, 255, 0.05);
         }
 
         /* Active: giữ màu xanh + scale + shadow nổi */
         .service-search-sticky .nav-link.active {
-            color: #0d6efd;
+            color: #00BFFF;
             transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25); /* shadow nổi nhẹ */
-            background-color: rgba(13, 110, 253, 0.08);
+            box-shadow: 0 6px 15px rgba(0, 191, 255, 0.25); /* shadow nổi nhẹ */
+            background-color: rgba(0, 191, 255, 0.08);
         }
         /* Form nổi dưới menu */
         .service-form-sticky {
@@ -286,12 +286,13 @@
             background: #ffffff;
             padding: 1rem;
             border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.15);
             opacity: 0;
             transform: translateX(100%);
             transition: transform 0.6s cubic-bezier(0.77,0,0.175,1), opacity 0.5s ease;
             width: 100%;
             z-index: 1;
+            border: 1px solid #e1f5fe;
         }
 
         .service-form-sticky.active-form {
@@ -303,16 +304,16 @@
 
         /* --- VOUCHER & MARQUEE STYLES REFINED --- */
         .voucher-marquee-background {
-            background: linear-gradient(135deg, #fff9f0 0%, #fff1e0 100%);
+            background: linear-gradient(135deg, #f0f8ff 0%, #e1f5fe 100%);
             padding: 3rem 1rem;
             border-radius: 30px;
-            box-shadow: inset 0 0 40px rgba(255, 111, 0, 0.05);
+            box-shadow: inset 0 0 40px rgba(0, 191, 255, 0.05);
         }
 
         .voucher-marquee-background h2 {
             font-size: 1.6rem;
             font-weight: 800;
-            color: #d35400;
+            color: #00BFFF;
             margin-bottom: 2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -326,14 +327,14 @@
             display: flex;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.06);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 111, 0, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.1);
         }
 
         .voucher-item:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(211, 84, 0, 0.15);
+            box-shadow: 0 12px 25px rgba(0, 191, 255, 0.15);
         }
 
         /* Ticket Left Side (Image) */
@@ -344,7 +345,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px;
-            border-right: 2px dashed #e0e0e0;
+            border-right: 2px dashed #b3e5fc;
             position: relative;
         }
 
@@ -361,7 +362,7 @@
             right: -10px;
             width: 20px;
             height: 20px;
-            background: #fff9f0; /* Matches section background */
+            background: #f0f8ff; /* Matches section background */
             border-radius: 50%;
             z-index: 2;
         }
@@ -394,8 +395,8 @@
         }
 
         .voucher-code-box {
-            background: #fff3e0;
-            color: #e67e22;
+            background: #e1f5fe;
+            color: #00BFFF;
             padding: 4px 12px;
             border-radius: 6px;
             font-family: 'Courier New', Courier, monospace;

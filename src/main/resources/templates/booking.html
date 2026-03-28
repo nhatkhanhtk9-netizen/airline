@@ -8,12 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f8ff; }
         .booking-card {
-            background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px; overflow: hidden; border: 1px solid #eee; transition: all 0.3s ease;
+            background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 191, 255, 0.05);
+            margin-bottom: 20px; overflow: hidden; border: 1px solid #e1f5fe; transition: all 0.3s ease;
         }
-        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 191, 255, 0.1); border-color: #00BFFF; }
         .card-header-custom {
             padding: 15px 20px; background: #fdfdfd; border-bottom: 1px solid #f1f1f1;
             display: flex; justify-content: space-between; align-items: center;
@@ -22,7 +22,7 @@
         .status-paid { background: #d1e7dd; color: #0f5132; }
         .status-pending { background: #fff3cd; color: #664d03; }
         .card-body-custom { padding: 20px; }
-        .route-info { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #0d6efd; }
+        .route-info { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #00BFFF; }
         .price-total { font-weight: 700; color: #dc3545; font-size: 1.2rem; }
 
         @media (max-width: 768px) {
@@ -30,11 +30,16 @@
             .card-header-custom { flex-direction: column; align-items: flex-start; gap: 8px; }
             .status-badge { align-self: flex-start; }
             .price-total { font-size: 1.1rem; margin-top: 10px; }
-            .text-md-end { text-align: left !important; margin-top: 15px; border-top: 1px dashed #eee; padding-top: 10px; }
+            .text-md-end { text-align: left !important; margin-top: 15px; border-top: 1px dashed #e1f5fe; padding-top: 10px; }
             .navbar-brand { font-size: 1.2rem; }
             .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
             .table-responsive { border: 0; }
         }
+        .text-primary { color: #00BFFF !important; }
+        .btn-primary { background-color: #00BFFF; border-color: #00BFFF; }
+        .btn-primary:hover { background-color: #0091EA; border-color: #0091EA; }
+        .btn-outline-primary { color: #00BFFF; border-color: #00BFFF; }
+        .btn-outline-primary:hover { background-color: #00BFFF; color: white; border-color: #00BFFF; }
     </style>
 </head>
 <body>
