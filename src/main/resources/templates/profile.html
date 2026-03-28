@@ -13,35 +13,38 @@
             background-color: #f0f8ff; /* AliceBlue - Sky Blue tint */
         }
         .profile-container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 900px;
+            margin: 40px auto;
             padding: 20px;
         }
         .profile-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.05);
-            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 191, 255, 0.08);
+            padding: 50px;
             border: 1px solid #e1f5fe;
         }
         .profile-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #f0f8ff;
         }
         .profile-avatar {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(45deg, #00BFFF, #87CEEB);
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #00BFFF, #0091EA);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
-            margin: 0 auto 15px;
-            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
-            overflow: hidden; /* Quan trọng để ảnh không tràn */
+            font-size: 60px;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.3);
+            overflow: hidden;
             position: relative;
+            border: 5px solid white;
         }
         .profile-avatar img {
             width: 100%;
@@ -53,61 +56,68 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 191, 255, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             color: white;
-            font-size: 12px;
-            padding: 4px 0;
+            font-size: 13px;
+            padding: 8px 0;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
             opacity: 0;
+            font-weight: 600;
         }
         .profile-avatar:hover .avatar-upload-label {
             opacity: 1;
         }
         .form-label {
-            font-weight: 600;
-            color: #444;
-            font-size: 0.9rem;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
         }
         .form-control {
-            border-radius: 10px;
-            padding: 12px 15px;
-            border: 1px solid #b3e5fc;
-            background-color: #ffffff;
+            border-radius: 14px;
+            padding: 14px 20px;
+            border: 2px solid #e1f5fe;
+            background-color: #fcfdfe;
+            transition: all 0.3s;
+            font-size: 1rem;
         }
         .form-control:focus {
             background-color: #fff;
             border-color: #00BFFF;
-            box-shadow: 0 0 0 0.25rem rgba(0, 191, 255, 0.1);
+            box-shadow: 0 0 0 5px rgba(0, 191, 255, 0.1);
+            transform: translateY(-1px);
         }
         .btn-update {
             background: linear-gradient(45deg, #00BFFF, #0091EA);
             border: none;
-            border-radius: 10px;
-            padding: 12px 30px;
-            font-weight: 600;
+            border-radius: 16px;
+            padding: 16px 45px;
+            font-weight: 700;
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 191, 255, 0.2);
+            font-size: 1.1rem;
         }
         .btn-update:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.4);
             color: white;
-        }
-        .nav-back {
-            margin-bottom: 20px;
         }
         .nav-back a {
             text-decoration: none;
             color: #00BFFF;
-            font-size: 0.9rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-weight: 500;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: 0.3s;
         }
         .nav-back a:hover {
             color: #01579b;
+            transform: translateX(-5px);
         }
     </style>
     <style th:replace="~{fragments/header :: header-styles}"></style>

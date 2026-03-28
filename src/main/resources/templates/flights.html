@@ -332,109 +332,88 @@
             background: white;
             overflow: hidden;
             margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            padding: 20px 30px;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.03);
         }
         .flight-card:hover {
             box-shadow: 0 10px 30px rgba(0, 191, 255, 0.1);
             border-color: #00BFFF;
+            transform: translateY(-2px);
         }
-
         .airline-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            flex: 1;
+            gap: 20px;
+            flex: 1.2;
         }
-
-        .airline-logo {
+        .airline-logo-placeholder {
             width: 50px;
             height: 50px;
-            object-fit: contain;
+            background: linear-gradient(135deg, #00BFFF, #0091EA);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
-
         .flight-time-info {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 40px;
             flex: 2;
             justify-content: center;
+            padding: 0 20px;
+            border-left: 1px solid #f0f0f0;
+            border-right: 1px solid #f0f0f0;
         }
-
-        .time-box {
-            text-align: center;
-        }
-
         .time {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #1f2937;
+            color: #2c3e50;
         }
-
-        .airport-code {
-            font-size: 0.9rem;
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .flight-duration {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #9ca3af;
-            font-size: 0.85rem;
-            position: relative;
-            min-width: 120px;
-        }
-
         .duration-line {
             width: 100%;
             height: 2px;
-            background: #e5e7eb;
-            margin: 5px 0;
+            background: linear-gradient(to right, transparent, #00BFFF, transparent);
+            margin: 8px 0;
             position: relative;
         }
-
         .duration-line::after {
             content: "✈️";
             position: absolute;
             top: -10px;
-            right: 0;
-            font-size: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            background: white;
+            padding: 0 5px;
         }
-
-        .flight-price-info {
-            flex: 1;
-            text-align: right;
-        }
-
-        .price {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .price-text {
             color: #ff5e1f;
-            margin-bottom: 5px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0;
         }
-
         .btn-book {
-            background: #ff5e1f;
+            background: linear-gradient(45deg, #ff5e1f, #ff8a50);
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .btn-book:hover {
-            background: #e54d00;
-            transform: scale(1.05);
-        }
-
-        .section-title {
-            font-size: 1.6rem; /* Giảm nhẹ kích thước */
+            padding: 12px 30px;
+            border-radius: 14px;
             font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 15px; /* Giảm khoảng cách dưới tiêu đề */
-            padding-left: 10px;
-            border-left: 5px solid #007bff;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 94, 31, 0.2);
+        }
+        .btn-book:hover {
+            background: linear-gradient(45deg, #e54d00, #ff5e1f);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 94, 31, 0.3);
+            color: white;
         }
 
         /* --- CUSTOM SELECT WITH ARROW --- */
@@ -550,22 +529,22 @@
             width: 35px;
             height: 35px;
             background: white;
-            border: 1px solid #cfd4da;
+            border: 1px solid #e1f5fe;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 191, 255, 0.1);
             transition: all 0.3s ease;
             z-index: 5;
-            color: #007bff;
+            color: #00BFFF;
         }
 
         .btn-swap:hover {
-            border-color: #007bff;
+            border-color: #00BFFF;
             transform: rotate(180deg);
-            box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.2);
         }
 
         .btn-swap i {
@@ -813,7 +792,7 @@
 
         <!-- ================= DANH SÁCH CHUYẾN BAY (TÁCH RIÊNG) ================ -->
         <div class="flight-list-container">
-            <h3 class="section-title" th:text="${searchActive} ? 'Kết quả tìm kiếm' : 'Chuyến bay phổ biến'">Chuyến bay phổ biến</h3>
+            <h3 class="section-title mb-4" th:text="${searchActive} ? 'Kết quả tìm kiếm' : 'Chuyến bay phổ biến'" style="border-left: 5px solid #00BFFF; padding-left: 15px;">Chuyến bay phổ biến</h3>
 
             <div th:if="${searchActive} and ${#lists.isEmpty(flights)}" class="alert alert-warning mt-3">
                 Không tìm thấy chuyến bay phù hợp. Vui lòng thử lại với điểm đi/đến và ngày bay khác.
@@ -821,13 +800,13 @@
             
             <div th:each="flight : ${flights}" class="flight-card">
                 <div class="airline-info">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; font-weight: bold; font-size: 0.8rem;">
-                        FB
+                    <div class="airline-logo-placeholder" th:text="${#strings.substring(airlineByFlightId[flight.id], 0, 1)}">
+                        F
                     </div>
                     <div>
-                        <div class="fw-bold" style="font-size: 0.95rem;" th:text="${flight.flightNumber}">VJ123</div>
-                        <div class="small text-muted" th:text="${airlineByFlightId[flight.id]}">VietJet Air</div>
-                        <div class="small text-muted" th:text="${flight.origin} + ' → ' + ${flight.destination}">Hà Nội → TP.HCM</div>
+                        <div class="fw-bold text-dark" style="font-size: 1.1rem;" th:text="${flight.flightNumber}">VJ123</div>
+                        <div class="text-muted small" th:text="${airlineByFlightId[flight.id]}">VietJet Air</div>
+                        <div class="text-primary fw-bold small mt-1" th:text="${flight.origin} + ' → ' + ${flight.destination}">Hà Nội → TP.HCM</div>
                     </div>
                 </div>
 
@@ -838,9 +817,9 @@
                     </div>
 
                     <div class="flight-duration">
-                        <span>2h 10m</span>
+                        <span class="fw-bold text-muted" style="font-size: 0.8rem;">2h 10m</span>
                         <div class="duration-line"></div>
-                        <span class="text-primary fw-bold d-none d-md-block" style="font-size: 0.75rem;">FLYBOOKING AIR</span>
+                        <span class="text-primary fw-bold d-none d-md-block" style="font-size: 0.7rem; letter-spacing: 1px;">FLYBOOKING AIR</span>
                     </div>
 
                     <div class="time-box">
@@ -849,13 +828,13 @@
                     </div>
                 </div>
 
-                <div class="flight-price-info">
-                    <div>
-                        <div class="price" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">1.200.000 VNĐ</div>
-                        <div class="text-muted small">/người</div>
+                <div class="flight-price-info ms-auto text-end" style="min-width: 200px;">
+                    <div class="mb-2">
+                        <span class="price-text" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')}">1.200.000</span>
+                        <span class="text-muted small fw-bold"> VNĐ/người</span>
                     </div>
                     <form th:action="@{/flight/quick-book/{id}(id=${flight.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="btn-book">Đặt vé</button>
+                        <button type="submit" class="btn-book">Đặt vé ngay</button>
                     </form>
                 </div>
             </div>
