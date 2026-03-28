@@ -136,6 +136,11 @@ public class FlightController {
                     ? f.getAirline()
                     : airlineNameFromFlightNumber(f.getFlightNumber());
             airlineByFlightId.put(f.getId(), name);
+            
+            // Tự động gán logo nếu chưa có trong DB
+            if (f.getAirlineLogo() == null || f.getAirlineLogo().isBlank()) {
+                f.setAirlineLogo(airlineLogoFromFlightNumber(f.getFlightNumber()));
+            }
         }
         model.addAttribute("airlineByFlightId", airlineByFlightId);
         return "flights"; // flights.html
@@ -164,6 +169,20 @@ public class FlightController {
             case "QH" -> "Bamboo Airways";
             case "BL" -> "Pacific Airlines";
             default -> "Hãng bay " + code;
+        };
+    }
+
+    private static String airlineLogoFromFlightNumber(String flightNumber) {
+        if (flightNumber == null || flightNumber.length() < 2) {
+            return null;
+        }
+        String code = flightNumber.substring(0, 2).toUpperCase();
+        return switch (code) {
+            case "VN" -> "vna.png";
+            case "VJ" -> "vietjet.png";
+            case "QH" -> "bamboo.png";
+            case "BL" -> "pacific.png";
+            default -> null;
         };
     }
 }

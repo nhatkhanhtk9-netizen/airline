@@ -67,6 +67,8 @@ public class DataInitializer implements CommandLineRunner {
             f1.setDepartureTime(LocalDateTime.now().plusDays(1));
             f1.setPrice(1500000.0);
             f1.setSeatsAvailable(100);
+            f1.setAirline("Vietnam Airlines");
+            f1.setAirlineLogo("vna.png");
             flightRepository.save(f1);
 
             Flight f2 = new Flight();
@@ -76,7 +78,20 @@ public class DataInitializer implements CommandLineRunner {
             f2.setDepartureTime(LocalDateTime.now().plusDays(2));
             f2.setPrice(800000.0);
             f2.setSeatsAvailable(50);
+            f2.setAirline("VietJet Air");
+            f2.setAirlineLogo("vietjet.png");
             flightRepository.save(f2);
+
+            Flight f3 = new Flight();
+            f3.setFlightNumber("QH789");
+            f3.setOrigin("TP. Hồ Chí Minh");
+            f3.setDestination("Đà Lạt");
+            f3.setDepartureTime(LocalDateTime.now().plusDays(3));
+            f3.setPrice(1200000.0);
+            f3.setSeatsAvailable(80);
+            f3.setAirline("Bamboo Airways");
+            f3.setAirlineLogo("bamboo.png");
+            flightRepository.save(f3);
         }
 
         // Initialize a sample booking if empty

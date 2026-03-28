@@ -361,6 +361,22 @@
             font-size: 1.2rem;
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
+        .airline-logo-container {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid #f0f0f0;
+        }
+        .airline-logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
         .flight-time-info {
             display: flex;
             align-items: center;
@@ -800,7 +816,10 @@
             
             <div th:each="flight : ${flights}" class="flight-card">
                 <div class="airline-info">
-                    <div class="airline-logo-placeholder" th:text="${#strings.substring(airlineByFlightId[flight.id], 0, 1)}">
+                    <div th:if="${flight.airlineLogo != null}" class="airline-logo-container">
+                        <img th:src="@{'/images/' + ${flight.airlineLogo}}" th:alt="${airlineByFlightId[flight.id]}" class="airline-logo-img">
+                    </div>
+                    <div th:if="${flight.airlineLogo == null}" class="airline-logo-placeholder" th:text="${#strings.substring(airlineByFlightId[flight.id], 0, 1)}">
                         F
                     </div>
                     <div>

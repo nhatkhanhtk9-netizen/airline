@@ -17,6 +17,7 @@ public class Flight {
     private double price;
     private int seatsAvailable;
     private String airline;
+    private String airlineLogo;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -43,4 +44,7 @@ public class Flight {
 
     public String getAirline() { return airline; }
     public void setAirline(String airline) { this.airline = airline; }
+
+    public String getAirlineLogo() { return airlineLogo; }
+    public void setAirlineLogo(String airlineLogo) { this.airlineLogo = airlineLogo; }
 }
