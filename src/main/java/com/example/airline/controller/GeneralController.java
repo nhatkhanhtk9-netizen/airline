@@ -42,7 +42,10 @@ public class GeneralController {
     }
 
     @GetMapping("/index1")
-    public String index1(Model model) {
+    public String index1(HttpSession session, Model model) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("flights", flightRepository.findAll());
         return "index1";
     }
@@ -77,27 +80,32 @@ public class GeneralController {
     }
 
     @GetMapping("/trains")
-    public String trains() {
+    public String trains(HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) return "redirect:/login";
         return "index";
     }
 
     @GetMapping("/buses")
-    public String buses() {
+    public String buses(HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) return "redirect:/login";
         return "index";
     }
 
     @GetMapping("/activities")
-    public String activities() {
+    public String activities(HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) return "redirect:/login";
         return "index";
     }
 
     @GetMapping("/car-rental")
-    public String carRental() {
+    public String carRental(HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) return "redirect:/login";
         return "index";
     }
 
     @GetMapping("/partnership")
-    public String partnership() {
+    public String partnership(HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) return "redirect:/login";
         return "index";
     }
 

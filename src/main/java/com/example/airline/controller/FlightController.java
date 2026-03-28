@@ -75,6 +75,9 @@ public class FlightController {
             HttpSession session,
             Model model
     ) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
         List<Flight> flights;
         boolean searchActive = false;
 

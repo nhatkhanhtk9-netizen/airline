@@ -29,6 +29,9 @@ public class BookingKSController {
                            HttpSession session,
                            Model model) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
 
         BookingKS bookingKS = new BookingKS();
         if (loggedInUser != null) {
