@@ -2,12 +2,16 @@ package com.example.airline.controller;
 
 import com.example.airline.model.Users;
 import com.example.airline.repository.UsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Controller
 public class UsersController {
@@ -108,5 +112,76 @@ public class UsersController {
         boolean wasAdmin = (user != null && user.isAdmin());
         session.invalidate();
         return wasAdmin ? "redirect:/admin/login" : "redirect:/login";
+    }
+
+    // --- QUÊN MẬT KHẨU ---
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam String email, HttpServletRequest request, Model model) {
+        Users user = usersRepository.findByEmailIgnoreCase(email.trim().toLowerCase());
+        
+        if (user == null) {
+            model.addAttribute("error", "Email không tồn tại trong hệ thống!");
+            return "forgot-password";
+        }
+
+        // Tạo token ngẫu nhiên
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        user.setResetTokenExpiry(LocalDateTime.now().plusHours(1)); // Token có hiệu lực trong 1 giờ
+        usersRepository.save(user);
+
+        // Lấy domain hiện tại (local hoặc railway)
+        String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        String resetLink = baseUrl + "/reset-password?token=" + token;
+        System.out.println(">>> RESET PASSWORD LINK: " + resetLink);
+
+        model.addAttribute("message", "Chúng tôi đã gửi link đặt lại mật khẩu vào email của bạn. (Vui lòng kiểm tra Console/Log để lấy link)");
+        return "forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam String token, Model model) {
+        Users user = usersRepository.findByResetToken(token);
+        
+        if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            model.addAttribute("error", "Link đã hết hạn hoặc không hợp lệ!");
+            return "forgot-password";
+        }
+
+        model.addAttribute("token", token);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam String token,
+                                       @RequestParam String password,
+                                       @RequestParam String confirmPassword,
+                                       Model model) {
+        Users user = usersRepository.findByResetToken(token);
+        
+        if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            model.addAttribute("error", "Link đã hết hạn hoặc không hợp lệ!");
+            return "forgot-password";
+        }
+
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+            model.addAttribute("token", token);
+            return "reset-password";
+        }
+
+        user.setPassword(passwordEncoder.encode(password));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        usersRepository.save(user);
+
+        model.addAttribute("error", "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.");
+        return "login";
     }
 }

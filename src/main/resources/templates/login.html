@@ -139,7 +139,10 @@
                 <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required>
             </div>
             <div class="mb-4">
-                <label for="password" class="form-label small fw-bold">Mật khẩu</label>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="password" class="form-label small fw-bold mb-0">Mật khẩu</label>
+                    <a th:href="@{/forgot-password}" class="text-primary small text-decoration-none">Quên mật khẩu?</a>
+                </div>
                 <input type="password" name="password" class="form-control" id="password" placeholder="••••••••" required>
             </div>
             <button type="submit" class="btn btn-login w-100 shadow-sm">Đăng Nhập</button>

@@ -21,6 +21,9 @@ public class Users {
     @Column(name = "admin")
     private boolean admin = false;
 
+    private String resetToken;
+    private java.time.LocalDateTime resetTokenExpiry;
+
     public Users() {
     }
 
@@ -31,6 +34,22 @@ public class Users {
         this.phone = phone;
         this.password = password;
         this.admin = admin;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public java.time.LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(java.time.LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
     }
 
     public Long getId() {

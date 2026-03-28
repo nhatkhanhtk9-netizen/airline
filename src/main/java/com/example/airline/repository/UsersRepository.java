@@ -8,6 +8,7 @@ import java.util.List;
 public interface UsersRepository extends JpaRepository<Users, Long> {
     Users findByEmailIgnoreCase(String email);
     Users findByEmailAndPassword(String email, String password);
+    Users findByResetToken(String resetToken);
 
     // return all users who are administrators
     List<Users> findByAdminTrue();
