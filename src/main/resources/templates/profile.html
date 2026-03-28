@@ -29,17 +29,40 @@
             margin-bottom: 30px;
         }
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             background: linear-gradient(45deg, #0d6efd, #00d2ff);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 50px;
             margin: 0 auto 15px;
             box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+            overflow: hidden; /* Quan trọng để ảnh không tràn */
+            position: relative;
+        }
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-upload-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 12px;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: 0.3s;
+            opacity: 0;
+        }
+        .profile-avatar:hover .avatar-upload-label {
+            opacity: 1;
         }
         .form-label {
             font-weight: 600;
@@ -95,9 +118,17 @@
 
     <div class="profile-card">
         <div class="profile-header">
-            <div class="profile-avatar">
-                <i class="bi bi-person-fill"></i>
-            </div>
+            <form id="avatarForm" th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
+                <div class="profile-avatar">
+                    <img th:if="${user.profileImage != null}" th:src="@{'/images/avatars/' + ${user.profileImage}}" alt="Avatar">
+                    <span th:if="${user.profileImage == null}" th:text="${#strings.substring(user.fullName, 0, 1)}">U</span>
+                    <label for="profilePicInput" class="avatar-upload-label">Thay đổi</label>
+                </div>
+                <input type="file" name="profilePic" id="profilePicInput" style="display: none;" onchange="document.getElementById('avatarForm').submit();">
+                <!-- Hidden fields to keep other data during avatar-only update if needed -->
+                <input type="hidden" name="fullName" th:value="${user.fullName}">
+                <input type="hidden" name="phone" th:value="${user.phone}">
+            </form>
             <h2 class="fw-bold" th:text="${user.fullName}">Họ tên người dùng</h2>
             <p class="text-muted" th:text="${user.email}">email@example.com</p>
         </div>
@@ -106,8 +137,12 @@
             <span th:text="${message}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-        <form th:action="@{/profile/update}" method="post">
+        <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="fullName" class="form-label">Họ và tên</label>

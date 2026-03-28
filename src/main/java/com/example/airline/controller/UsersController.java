@@ -9,7 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -200,6 +206,7 @@ public class UsersController {
                                 @RequestParam String phone,
                                 @RequestParam(required = false) String newPassword,
                                 @RequestParam(required = false) String confirmPassword,
+                                @RequestParam(value = "profilePic", required = false) MultipartFile profilePic,
                                 HttpSession session,
                                 Model model) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
@@ -210,6 +217,33 @@ public class UsersController {
         Users user = usersRepository.findById(loggedInUser.getId()).orElseThrow();
         user.setFullName(fullName);
         user.setPhone(phone);
+
+        // Xử lý Upload Ảnh đại diện
+        if (profilePic != null && !profilePic.isEmpty()) {
+            try {
+                // Đường dẫn lưu file: src/main/resources/static/images/avatars/
+                String uploadDir = "src/main/resources/static/images/avatars/";
+                Path uploadPath = Paths.get(uploadDir);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Tên file duy nhất
+                String fileName = UUID.randomUUID().toString() + "_" + profilePic.getOriginalFilename();
+                Path filePath = uploadPath.resolve(fileName);
+
+                Files.copy(profilePic.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                
+                // Lưu tên file vào database
+                user.setProfileImage(fileName);
+                System.out.println(">>> Profile image uploaded: " + fileName);
+
+            } catch (IOException e) {
+                System.err.println(">>> Error uploading profile image: " + e.getMessage());
+                model.addAttribute("error", "Lỗi khi tải lên ảnh: " + e.getMessage());
+            }
+        }
 
         if (newPassword != null && !newPassword.isBlank()) {
             if (!newPassword.equals(confirmPassword)) {

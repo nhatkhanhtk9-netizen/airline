@@ -954,7 +954,8 @@
                     <li class="nav-item">
                         <a class="nav-link nav-profile-link" th:href="@{/profile}">
                             <div class="user-avatar-nav">
-                                <span th:text="${#strings.substring(loggedInUser.fullName, 0, 1)}">U</span>
+                                <img th:if="${loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${loggedInUser.profileImage}}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                <span th:if="${loggedInUser.profileImage == null}" th:text="${#strings.substring(loggedInUser.fullName, 0, 1)}">U</span>
                             </div>
                             <span class="fw-bold text-dark d-none d-xl-inline" th:text="${loggedInUser.fullName}">User Name</span>
                         </a>

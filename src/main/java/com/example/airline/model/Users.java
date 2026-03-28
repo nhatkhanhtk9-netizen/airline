@@ -23,17 +23,27 @@ public class Users {
 
     private String resetToken;
     private java.time.LocalDateTime resetTokenExpiry;
+    private String profileImage;
 
     public Users() {
     }
 
-    public Users(Long id, String fullName, String email, String phone, String password, boolean admin) {
+    public Users(Long id, String fullName, String email, String phone, String password, boolean admin, String profileImage) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.password = password;
         this.admin = admin;
+        this.profileImage = profileImage;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public String getResetToken() {
