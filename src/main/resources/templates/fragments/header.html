@@ -169,7 +169,7 @@
                             <a class="nav-link nav-profile-link" th:href="@{/profile}">
                                 <div class="user-avatar-nav">
                                     <img th:if="${session.loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${session.loggedInUser.profileImage}}" alt="Avatar">
-                                    <span th:if="${session.loggedInUser.profileImage == null}" th:text="${#strings.substring(session.loggedInUser.fullName, 0, 1)}">U</span>
+                                    <span th:if="${session.loggedInUser.profileImage == null}" th:text="${session.loggedInUser.fullName != null and !session.loggedInUser.fullName.isEmpty() ? #strings.substring(session.loggedInUser.fullName, 0, 1) : 'U'}">U</span>
                                 </div>
                                 <span class="fw-bold text-dark d-none d-xl-inline" th:text="${session.loggedInUser.fullName}">User</span>
                             </a>
