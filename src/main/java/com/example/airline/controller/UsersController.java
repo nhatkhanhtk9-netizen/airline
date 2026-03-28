@@ -136,13 +136,8 @@ public class UsersController {
         user.setResetTokenExpiry(LocalDateTime.now().plusHours(1)); // Token có hiệu lực trong 1 giờ
         usersRepository.save(user);
 
-        // Lấy domain hiện tại (local hoặc railway)
-        String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-        String resetLink = baseUrl + "/reset-password?token=" + token;
-        System.out.println(">>> RESET PASSWORD LINK: " + resetLink);
-
-        model.addAttribute("message", "Chúng tôi đã gửi link đặt lại mật khẩu vào email của bạn. (Vui lòng kiểm tra Console/Log để lấy link)");
-        return "forgot-password";
+        // Chuyển hướng trực tiếp đến trang đặt lại mật khẩu với token vừa tạo
+        return "redirect:/reset-password?token=" + token;
     }
 
     @GetMapping("/reset-password")
