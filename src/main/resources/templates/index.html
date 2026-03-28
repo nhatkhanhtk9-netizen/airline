@@ -423,70 +423,11 @@
         width: 100%;
     }
 }
-    </style>
+    <style th:replace="~{fragments/header :: header-styles}"></style>
 </head>
 <body>
 
-    <!-- THANH 1: Logo + Nút chức năng -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-2">
-        <div class="container-fluid">
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/images/logo.png" alt="Logo" class="logo me-2">
-                <span class="fw-bold">FlyBooking</span>
-            </a>
-
-            <!-- Thanh tìm kiếm trong Navbar -->
-            <form class="d-flex ms-lg-4 my-2 my-lg-0 flex-grow-1" action="/search" method="GET" style="max-width: 500px;">
-                <div class="input-group">
-                    <input type="text" name="query" class="form-control" placeholder="Tìm chuyến bay, khách sạn, điểm đến..." aria-label="Search">
-                    <button class="btn btn-primary" type="submit">
-                        🔍
-                    </button>
-                </div>
-            </form>
-
-            <!-- Toggle cho mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topMenu"
-                    aria-controls="topMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="topMenu">
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
-
-                    <li class="nav-item">
-                        <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/my-booking">Đặt chỗ của tôi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/partnership">Hợp tác</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            VNĐ
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="currencyDropdown">
-                            <li><a class="dropdown-item" href="?currency=USD">USD</a></li>
-                            <li><a class="dropdown-item" href="?currency=EUR">EUR</a></li>
-                            <li><a class="dropdown-item" href="?currency=VND">VND</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-success btn-sm" href="/login">Đăng nhập</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary btn-sm" href="/register">Đăng ký</a>
-                    </li>
-                </ul>
-            </div>  
-        </div>
-    </nav>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- THANH 2: Menu dịch vụ -->
     <nav class="navbar navbar-expand-lg service-menu">

@@ -890,116 +890,11 @@
                 margin-top: 0 !important;
             }
         }
-    </style>
+    <style th:replace="~{fragments/header :: header-styles}"></style>
 </head>
 <body>
 
-    <!-- THANH 1: Logo + Nút chức năng -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-2">
-        <div class="container-fluid">
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/images/logo.png" alt="Logo" class="logo me-2">
-                <span class="fw-bold">FLY</span>
-            </a>
-
-            <!-- Toggle cho mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topMenu"
-                    aria-controls="topMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
-
-            <form class="d-flex d-lg-none w-100 mt-2" action="/search" method="get">
-                <div class="input-group">
-                    <input class="form-control border-end-0" type="search" name="query" placeholder="Tìm chuyến bay, khách sạn..." aria-label="Search" style="border-radius: 20px 0 0 20px;">
-                    <button class="btn btn-outline-primary border-start-0" type="submit" style="border-radius: 0 20px 20px 0; background-color: white;">
-                        🔍
-                    </button>
-                </div>
-            </form>
-
-            <div class="collapse navbar-collapse" id="topMenu">
-                <!-- Thanh tìm kiếm -->
-                <form class="d-none d-lg-flex mx-auto" style="max-width: 400px; width: 100%;" action="/search" method="get">
-                    <div class="input-group">
-                        <input class="form-control border-end-0" type="search" name="query" placeholder="Tìm chuyến bay, khách sạn..." aria-label="Search" style="border-radius: 20px 0 0 20px;">
-                        <button class="btn btn-outline-primary border-start-0" type="submit" style="border-radius: 0 20px 20px 0; background-color: white;">
-                            🔍
-                        </button>
-                    </div>
-                </form>
-
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
-                    <li class="nav-item">
-                        <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/my-booking">Đặt chỗ của tôi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/partnership">Hợp tác</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            VNĐ
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="currencyDropdown">
-                            <li><a class="dropdown-item" href="?currency=USD">USD</a></li>
-                            <li><a class="dropdown-item" href="?currency=EUR">EUR</a></li>
-                            <li><a class="dropdown-item" href="?currency=VND">VND</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-profile-link" th:href="@{/profile}">
-                            <div class="user-avatar-nav">
-                                <img th:if="${loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${loggedInUser.profileImage}}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                <span th:if="${loggedInUser.profileImage == null}" th:text="${#strings.substring(loggedInUser.fullName, 0, 1)}">U</span>
-                            </div>
-                            <span class="fw-bold text-dark d-none d-xl-inline" th:text="${loggedInUser.fullName}">User Name</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger fw-bold" th:href="@{/logout}">Đăng xuất</a>
-                    </li>
-                </ul>
-            </div>  
-        </div>
-    </nav>
-
-    <!-- THANH 2: Menu dịch vụ -->
-    <nav class="navbar navbar-expand-lg service-menu">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#serviceMenu2"
-                    aria-controls="serviceMenu2" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="serviceMenu2">
-                <ul class="navbar-nav align-items-center justify-content-start gap-3 w-100">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/flights}">✈️ Vé Máy Bay</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/hotels">🏨 Khách sạn</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/trains">🚆 Tàu hỏa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/buses">🚌 Xe khách</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/activities">🎫 Trải nghiệm</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/car-rental">🚗 Thuê xe</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="activitiesDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                            Hoạt động & Vui chơi
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="activitiesDropdown">
-                            <li><a class="dropdown-item" href="/activities/combo">Combo</a></li>
-                            <li><a class="dropdown-item" href="/activities/insurance">Bảo hiểm</a></li>
-                            <li><a class="dropdown-item" href="/activities/tours">Tour trải nghiệm</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- BANNER LỚN PHÍA TRÊN STICKY MENU -->
 

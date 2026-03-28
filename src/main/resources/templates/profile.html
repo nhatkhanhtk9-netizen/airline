@@ -107,9 +107,11 @@
         .nav-back a:hover {
             color: #0d6efd;
         }
-    </style>
+    <style th:replace="~{fragments/header :: header-styles}"></style>
 </head>
 <body>
+
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="profile-container">
     <div class="nav-back">
