@@ -55,6 +55,59 @@
             transform: scale(1.1);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
+        .summary-card {
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .summary-metric {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            height: 220px;
+            padding: 20px 10px 10px 10px;
+        }
+        .bar-item {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .bar-value {
+            font-weight: 800;
+            color: #00BFFF;
+            font-size: 1.05rem;
+            line-height: 1;
+        }
+        .bar {
+            width: 100%;
+            max-width: 90px;
+            background: linear-gradient(180deg, #00BFFF 0%, #0091EA 100%);
+            border-radius: 14px 14px 8px 8px;
+            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.18);
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+        .bar:hover {
+            transform: translateY(-4px);
+            filter: brightness(1.05);
+        }
+        .bar-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #6c757d;
+        }
+        .status-badges .badge {
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
     </style>
 </head>
 <body>
@@ -123,6 +176,71 @@
                 </div>
             </div>
 
+            <div class="row mt-5 g-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 rounded-4 summary-card">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0 fw-bold">Tổng kết 4 tháng gần nhất</h5>
+                                <div class="small text-muted">Tổng đơn (Bay + KS + Khác)</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="bar-chart">
+                                <div class="bar-item" th:each="m : ${monthSummaries}">
+                                    <div class="bar-value" th:text="${m.total}">0</div>
+                                    <div class="bar" th:style="'height:' + ${m.heightPx} + 'px'" th:title="'Bay: ' + ${m.flight} + ' | KS: ' + ${m.hotel} + ' | Khác: ' + ${m.general}"></div>
+                                    <div class="bar-label" th:text="${m.label}">Tháng 1</div>
+                                </div>
+                            </div>
+                            <div class="text-center small text-muted mt-2">Di chuột vào cột để xem chi tiết theo loại dịch vụ.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-4 summary-card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Chỉ số tổng hợp</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                <div class="text-muted fw-bold">Vé máy bay</div>
+                                <div class="summary-metric" th:text="${flightBookingCount}">0</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                <div class="text-muted fw-bold">Khách sạn</div>
+                                <div class="summary-metric" th:text="${hotelBookingCount}">0</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                <div class="text-muted fw-bold">Đặt chỗ khác</div>
+                                <div class="summary-metric" th:text="${generalBookingCount}">0</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between py-2">
+                                <div class="text-muted fw-bold">Doanh thu (ước tính)</div>
+                                <div class="summary-metric text-danger" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</div>
+                            </div>
+                            <div class="small text-muted mt-2">
+                                Bay: <span class="fw-bold" th:text="${#numbers.formatDecimal(flightRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                                • Khác: <span class="fw-bold" th:text="${#numbers.formatDecimal(generalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0 rounded-4 summary-card">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Trạng thái đặt vé máy bay</h5>
+                        </div>
+                        <div class="card-body status-badges d-flex flex-wrap gap-2" th:if="${flightBookingStatusCounts != null}">
+                            <span class="badge bg-light text-dark border" th:each="e : ${flightBookingStatusCounts}" th:text="${e.key + ': ' + e.value}">PENDING: 0</span>
+                        </div>
+                        <div class="card-body text-muted" th:if="${flightBookingStatusCounts == null}">
+                            Chưa có dữ liệu.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row mt-5">
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0 rounded-4">
@@ -130,7 +248,35 @@
                             <h5 class="mb-0 fw-bold">Hoạt động gần đây</h5>
                         </div>
                         <div class="card-body">
-                            <p class="text-muted text-center py-4">Hệ thống đang hoạt động ổn định.</p>
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="fw-bold mb-2">Đặt vé máy bay mới</div>
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0" th:each="b : ${recentFlightBookings}">
+                                            <div>
+                                                <div class="fw-bold" th:text="${b.bookingCode != null ? b.bookingCode : '#' + b.id}">#1</div>
+                                                <div class="small text-muted" th:text="${b.fromLocation + ' → ' + b.toLocation}">SGN → HAN</div>
+                                            </div>
+                                            <span class="badge bg-light text-dark border" th:text="${b.status}">PENDING</span>
+                                        </div>
+                                        <div class="text-muted small px-0" th:if="${recentFlightBookings == null or #lists.isEmpty(recentFlightBookings)}">Chưa có đặt vé mới.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="fw-bold mb-2">Người dùng mới</div>
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0" th:each="u : ${recentUsers}">
+                                            <div>
+                                                <div class="fw-bold" th:text="${u.fullName != null ? u.fullName : 'User'}">User</div>
+                                                <div class="small text-muted" th:text="${u.email}">user@example.com</div>
+                                            </div>
+                                            <span class="badge bg-primary" th:if="${u.admin}">ADMIN</span>
+                                            <span class="badge bg-light text-dark border" th:if="${!u.admin}">USER</span>
+                                        </div>
+                                        <div class="text-muted small px-0" th:if="${recentUsers == null or #lists.isEmpty(recentUsers)}">Chưa có người dùng mới.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,6 +287,8 @@
                         </div>
                         <div class="card-body d-grid gap-2">
                             <a th:href="@{/admin/flights/add}" class="btn btn-outline-primary text-start">➕ Thêm chuyến bay mới</a>
+                            <a th:href="@{/admin/bookings}" class="btn btn-outline-primary text-start">🎫 Xem danh sách đặt chỗ</a>
+                            <a th:href="@{/admin/users}" class="btn btn-outline-primary text-start">👥 Quản lý người dùng</a>
                             <a th:href="@{/}" class="btn btn-outline-secondary text-start" target="_blank">🌐 Xem trang chủ</a>
                         </div>
                     </div>

@@ -21,7 +21,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -110,10 +119,180 @@ public class AdminController {
         if (!isAdmin(session)) {
             return "redirect:/admin/login";
         }
-        model.addAttribute("flightCount", flightRepository.count());
-        model.addAttribute("userCount", usersRepository.count());
-        model.addAttribute("bookingCount", flightBookingRepository.count());
+        long flightCount = flightRepository.count();
+        long userCount = usersRepository.count();
+        long flightBookingCount = flightBookingRepository.count();
+        long hotelBookingCount = bookingKSRepository.count();
+        long generalBookingCount = bookingRepository.count();
+        long bookingCount = flightBookingCount + hotelBookingCount + generalBookingCount;
+
+        List<FlightBooking> flightBookings = flightBookingRepository.findAll();
+        List<BookingKS> hotelBookings = bookingKSRepository.findAll();
+        List<Booking> generalBookings = bookingRepository.findAll();
+
+        double flightRevenue = flightBookings.stream()
+                .map(FlightBooking::getTotalPrice)
+                .filter(Objects::nonNull)
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        long generalRevenue = generalBookings.stream()
+                .map(Booking::getTotalPrice)
+                .filter(Objects::nonNull)
+                .mapToLong(Long::longValue)
+                .sum();
+
+        double totalRevenue = flightRevenue + generalRevenue;
+
+        Map<String, Long> flightBookingStatusCounts = flightBookings.stream()
+                .map(b -> normalizeStatus(b.getStatus()))
+                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+
+        Map<String, Long> sortedStatusCounts = flightBookingStatusCounts.entrySet().stream()
+                .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
+
+        List<MonthSummary> monthSummaries = buildLast4MonthsSummary(flightBookings, hotelBookings, generalBookings);
+
+        Sort latestFirst = Sort.by(Sort.Direction.DESC, "id");
+        model.addAttribute("recentFlightBookings", flightBookingRepository.findAll(latestFirst).stream().limit(5).toList());
+        model.addAttribute("recentUsers", usersRepository.findAll(latestFirst).stream().limit(5).toList());
+
+        model.addAttribute("flightCount", flightCount);
+        model.addAttribute("userCount", userCount);
+        model.addAttribute("bookingCount", bookingCount);
+        model.addAttribute("flightBookingCount", flightBookingCount);
+        model.addAttribute("hotelBookingCount", hotelBookingCount);
+        model.addAttribute("generalBookingCount", generalBookingCount);
+        model.addAttribute("flightRevenue", flightRevenue);
+        model.addAttribute("generalRevenue", generalRevenue);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("flightBookingStatusCounts", sortedStatusCounts);
+        model.addAttribute("monthSummaries", monthSummaries);
         return "admin/index";
+    }
+
+    private static String normalizeStatus(String status) {
+        if (status == null) return "UNKNOWN";
+        String s = status.trim();
+        if (s.isEmpty()) return "UNKNOWN";
+        return s.toUpperCase(Locale.ROOT);
+    }
+
+    private static LocalDate safeParseIsoDate(String value) {
+        if (value == null) return null;
+        String s = value.trim();
+        if (s.isEmpty()) return null;
+        try {
+            return LocalDate.parse(s);
+        } catch (DateTimeParseException ignored) {
+            return null;
+        }
+    }
+
+    private static boolean isInMonth(LocalDate date, YearMonth yearMonth) {
+        if (date == null) return false;
+        return date.getYear() == yearMonth.getYear() && date.getMonthValue() == yearMonth.getMonthValue();
+    }
+
+    private static List<MonthSummary> buildLast4MonthsSummary(
+            List<FlightBooking> flightBookings,
+            List<BookingKS> hotelBookings,
+            List<Booking> generalBookings
+    ) {
+        YearMonth now = YearMonth.now();
+        List<YearMonth> months = new ArrayList<>();
+        for (int i = 3; i >= 0; i--) {
+            months.add(now.minusMonths(i));
+        }
+
+        List<long[]> raw = new ArrayList<>();
+        for (YearMonth ym : months) {
+            long flightCount = flightBookings.stream()
+                    .map(b -> safeParseIsoDate(b.getDepartureDate()))
+                    .filter(d -> isInMonth(d, ym))
+                    .count();
+
+            long hotelCount = hotelBookings.stream()
+                    .map(BookingKS::getCheckIn)
+                    .filter(d -> isInMonth(d, ym))
+                    .count();
+
+            long generalCount = generalBookings.stream()
+                    .map(b -> safeParseIsoDate(b.getDate()))
+                    .filter(d -> isInMonth(d, ym))
+                    .count();
+
+            long total = flightCount + hotelCount + generalCount;
+            raw.add(new long[]{flightCount, hotelCount, generalCount, total});
+        }
+
+        long maxTotal = raw.stream().mapToLong(a -> a[3]).max().orElse(0L);
+
+        List<MonthSummary> out = new ArrayList<>();
+        for (int i = 0; i < months.size(); i++) {
+            YearMonth ym = months.get(i);
+            long flight = raw.get(i)[0];
+            long hotel = raw.get(i)[1];
+            long general = raw.get(i)[2];
+            long total = raw.get(i)[3];
+
+            int heightPx = 0;
+            if (maxTotal > 0) {
+                heightPx = (int) Math.round((total * 160.0) / maxTotal);
+            }
+
+            String label = "Tháng " + ym.getMonthValue();
+            out.add(new MonthSummary(label, total, heightPx, flight, hotel, general));
+        }
+        return out;
+    }
+
+    public static class MonthSummary {
+        private final String label;
+        private final long total;
+        private final int heightPx;
+        private final long flight;
+        private final long hotel;
+        private final long general;
+
+        public MonthSummary(String label, long total, int heightPx, long flight, long hotel, long general) {
+            this.label = label;
+            this.total = total;
+            this.heightPx = heightPx;
+            this.flight = flight;
+            this.hotel = hotel;
+            this.general = general;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public long getTotal() {
+            return total;
+        }
+
+        public int getHeightPx() {
+            return heightPx;
+        }
+
+        public long getFlight() {
+            return flight;
+        }
+
+        public long getHotel() {
+            return hotel;
+        }
+
+        public long getGeneral() {
+            return general;
+        }
     }
 
     // --- QUẢN LÝ CHUYẾN BAY ---
