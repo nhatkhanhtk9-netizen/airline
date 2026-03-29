@@ -517,20 +517,6 @@
             background: linear-gradient(to bottom, #ffffff, #f0f8ff);
             border: 1px solid #e1f5fe;
         }
-            transform: rotate(4deg) translateY(12px);
-        }
-
-        .stack-box:hover {
-            transform: rotate(0deg) scale(1.05);
-            z-index: 10;
-            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
-        }
-
-        .stack-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
 
         @media (max-width: 768px) {
             .stack-wrapper {
@@ -1295,7 +1281,7 @@
                                 <div class="small text-muted mt-1">📅 Khởi hành: <span th:text="${#temporals.format(f.departureTime, 'dd/MM/yyyy')}">20/12/2023</span></div>
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top">
-                                <div class="flight-price-refined" th:text="${#numbers.formatDecimal(f.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</div>
+                                <div class="flight-price-refined" th:text="${#numbers.formatInteger(f.price, 3, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</div>
                                 <a th:href="@{/flights/{id}(id=${f.id})}" class="btn btn-primary btn-sm px-3 rounded-pill fw-bold">Chi tiết</a>
                             </div>
                         </div>
@@ -1311,7 +1297,7 @@
                                 <div class="flight-route" th:text="${f.origin + ' ✈ ' + f.destination}">Hà Nội → Sài Gòn</div>
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top">
-                                <div class="flight-price-refined" th:text="${#numbers.formatDecimal(f.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</div>
+                                <div class="flight-price-refined" th:text="${#numbers.formatInteger(f.price, 3, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</div>
                                 <a th:href="@{/flights/{id}(id=${f.id})}" class="btn btn-primary btn-sm px-3 rounded-pill fw-bold">Chi tiết</a>
                             </div>
                         </div>

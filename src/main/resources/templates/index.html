@@ -729,7 +729,7 @@ document.getElementById('flightFormSticky').classList.add('active-form');
                         <img src="/images/flight1.jpg" class="card-img-top rounded" alt="Flight">
                         <div class="card-body p-2 p-md-3">
                             <h6 class="card-title fw-bold mb-1" style="font-size: 0.9rem;" th:text="${f.origin + ' → ' + f.destination}">Hà Nội → Sài Gòn</h6>
-                            <p class="text-primary fw-bold mb-1" style="font-size: 0.85rem;" th:text="${#numbers.formatDecimal(f.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</p>
+                            <p class="text-primary fw-bold mb-1" style="font-size: 0.85rem;" th:text="${#numbers.formatInteger(f.price, 3, 'POINT') + ' VNĐ'}">1,500,000 VNĐ</p>
                             <p class="card-text small text-muted mb-2 d-none d-md-block">
                                 📅 Khởi hành: <span th:text="${#temporals.format(f.departureTime, 'dd/MM/yyyy HH:mm')}">20/12/2023</span>
                             </p>

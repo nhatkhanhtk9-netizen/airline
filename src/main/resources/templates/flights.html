@@ -818,13 +818,13 @@
                 <div class="airline-info">
                     <div class="airline-logo-container">
                         <!-- Sử dụng ảnh mẫu trực tuyến nếu không có file local -->
-                        <img th:if="${#strings.startsWith(flight.flightNumber, 'VJ')}" src="https://image.vietjetair.com/api/RenderImage?fileName=logo-vj1611546116111.png" alt="VietJet Air" class="airline-logo-img">
-                        <img th:if="${#strings.startsWith(flight.flightNumber, 'VN')}" src="https://www.vietnamairlines.com/style%20library/vietnamairlines/article/logo.png" alt="Vietnam Airlines" class="airline-logo-img">
-                        <img th:if="${#strings.startsWith(flight.flightNumber, 'QH')}" src="https://www.bambooairways.com/RESOURCES/BambooAirways/images/logo.png" alt="Bamboo Airways" class="airline-logo-img">
+                        <img th:if="${#strings.startsWith(flight.flightNumber, 'VJ')}" src="https://image.vietjetair.com/api/RenderImage?fileName=logo-vj1611546116111.png" alt="VietJet Air" class="airline-logo-img" />
+                        <img th:if="${#strings.startsWith(flight.flightNumber, 'VN')}" src="https://www.vietnamairlines.com/style%20library/vietnamairlines/article/logo.png" alt="Vietnam Airlines" class="airline-logo-img" />
+                        <img th:if="${#strings.startsWith(flight.flightNumber, 'QH')}" src="https://www.bambooairways.com/RESOURCES/BambooAirways/images/logo.png" alt="Bamboo Airways" class="airline-logo-img" />
                         
                         <!-- Fallback nếu không khớp mã hãng nào -->
                         <img th:if="${!#strings.startsWith(flight.flightNumber, 'VJ') and !#strings.startsWith(flight.flightNumber, 'VN') and !#strings.startsWith(flight.flightNumber, 'QH')}" 
-                             src="https://img.icons8.com/color/96/airplane-take-off.png" class="airline-logo-img">
+                             src="https://img.icons8.com/color/96/airplane-take-off.png" alt="Flight Logo" class="airline-logo-img" />
                     </div>
                     <div>
                         <div class="fw-bold text-dark" style="font-size: 1.1rem;" th:text="${flight.flightNumber}">VJ123</div>
@@ -853,7 +853,7 @@
 
                 <div class="flight-price-info ms-auto text-end" style="min-width: 200px;">
                     <div class="mb-2">
-                        <span class="price-text" th:text="${#numbers.formatDecimal(flight.price, 0, 'COMMA', 0, 'POINT')}">1.200.000</span>
+                        <span class="price-text" th:text="${#numbers.formatInteger(flight.price, 3, 'POINT')}">1.200.000</span>
                         <span class="text-muted small fw-bold"> VNĐ/người</span>
                     </div>
                     <form th:action="@{/flight/quick-book/{id}(id=${flight.id})}" method="post" style="display: inline;">
