@@ -102,6 +102,52 @@
         .text-primary {
             color: var(--sky-blue) !important;
         }
+
+        /* Floating Support Button */
+        .floating-support-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00BFFF 0%, #0091EA 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.4);
+            z-index: 1000;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .floating-support-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            color: white;
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.5);
+        }
+        .floating-support-btn::after {
+            content: "Hỗ trợ";
+            position: absolute;
+            right: 70px;
+            background: white;
+            color: #00BFFF;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .floating-support-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+            right: 80px;
+        }
     </style>
 </head>
 <body>
@@ -147,6 +193,9 @@
                 </form>
 
                 <ul class="navbar-nav ms-auto align-items-center gap-2 mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a href="/support" class="nav-link fw-bold text-primary me-2"><i class="bi bi-headset"></i> Hỗ trợ</a>
+                    </li>
                     <li class="nav-item">
                         <a href="/promotions" class="btn promo-btn">🎉 Khuyến mãi</a>
                     </li>
@@ -208,6 +257,11 @@
             </div>
         </div>
     </nav>
+
+    <!-- Nút hỗ trợ nổi (Floating Support Button) -->
+    <a href="/support" class="floating-support-btn">
+        <i class="bi bi-headset"></i>
+    </a>
 </div>
 
 </body>
