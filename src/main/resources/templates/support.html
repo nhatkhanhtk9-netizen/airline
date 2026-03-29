@@ -117,8 +117,16 @@
 
 <div class="support-header">
     <div class="container">
-        <h1 class="fw-bold">Xin chào, chúng tôi có thể giúp gì cho bạn?</h1>
-        <p class="opacity-75">Gửi yêu cầu hoặc thắc mắc của bạn, đội ngũ hỗ trợ sẽ phản hồi trong vòng 24h.</p>
+        <!-- Hiển thị tên và icon nếu đã đăng nhập -->
+        <div th:if="${session.loggedInUser != null}" class="mb-4 d-flex flex-column align-items-center">
+            <div class="user-avatar-nav mb-3" style="width: 80px; height: 80px; font-size: 32px; border: 4px solid rgba(255,255,255,0.3);">
+                <img th:if="${session.loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${session.loggedInUser.profileImage}}" alt="Avatar">
+                <span th:if="${session.loggedInUser.profileImage == null}" th:text="${session.loggedInUser.fullName != null and !session.loggedInUser.fullName.isEmpty() ? #strings.substring(session.loggedInUser.fullName, 0, 1) : 'U'}">U</span>
+            </div>
+            <h2 class="fw-bold">Xin chào, <span th:text="${session.loggedInUser.fullName}">Khách hàng</span>!</h2>
+        </div>
+        <h1 th:if="${session.loggedInUser == null}" class="fw-bold">Xin chào, chúng tôi có thể giúp gì cho bạn?</h1>
+        <p class="opacity-75">Gửi yêu cầu hoặc thắc mắc của bạn, TicketHub KhNg sẽ phản hồi trong vòng 24h.</p>
     </div>
 </div>
 

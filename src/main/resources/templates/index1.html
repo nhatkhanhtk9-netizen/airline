@@ -887,6 +887,20 @@
 
     <div th:replace="~{fragments/header :: header}"></div>
 
+    <!-- KHỐI CHÀO MỪNG NGƯỜI DÙNG -->
+    <div class="container mt-4 mb-2">
+        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-4 shadow-sm border border-light">
+            <div class="user-avatar-nav" style="width: 50px; height: 50px; font-size: 20px;">
+                <img th:if="${loggedInUser.profileImage != null}" th:src="@{'/images/avatars/' + ${loggedInUser.profileImage}}" alt="Avatar">
+                <span th:if="${loggedInUser.profileImage == null}" th:text="${loggedInUser.fullName != null and !loggedInUser.fullName.isEmpty() ? #strings.substring(loggedInUser.fullName, 0, 1) : 'U'}">U</span>
+            </div>
+            <div>
+                <h5 class="mb-0 fw-bold text-dark">Chào mừng quay trở lại, <span th:text="${loggedInUser.fullName}">Khách hàng</span>! 👋</h5>
+                <p class="mb-0 text-muted small">Hôm nay bạn muốn bay đi đâu?</p>
+            </div>
+        </div>
+    </div>
+
     <!-- BANNER LỚN PHÍA TRÊN STICKY MENU -->
 
 <!-- THANH 3: Menu dịch vụ + Form tương ứng -->
