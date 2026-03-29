@@ -22,6 +22,10 @@ public class SupportMessage {
     private LocalDateTime createdAt;
     private String status; // PENDING, IN_PROGRESS, RESOLVED
 
+    @Column(columnDefinition = "TEXT")
+    private String adminReply;
+    private LocalDateTime repliedAt;
+
     public SupportMessage() {
         this.createdAt = LocalDateTime.now();
         this.status = "PENDING";
@@ -51,4 +55,10 @@ public class SupportMessage {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getAdminReply() { return adminReply; }
+    public void setAdminReply(String adminReply) { this.adminReply = adminReply; }
+
+    public LocalDateTime getRepliedAt() { return repliedAt; }
+    public void setRepliedAt(LocalDateTime repliedAt) { this.repliedAt = repliedAt; }
 }

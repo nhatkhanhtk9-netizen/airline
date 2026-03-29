@@ -5,10 +5,12 @@ import com.example.airline.model.BookingKS;
 import com.example.airline.model.Flight;
 import com.example.airline.model.FlightBooking;
 import com.example.airline.model.Users;
+import com.example.airline.model.SupportMessage;
 import com.example.airline.repository.BookingKSRepository;
 import com.example.airline.repository.BookingRepository;
 import com.example.airline.repository.FlightBookingRepository;
 import com.example.airline.repository.FlightRepository;
+import com.example.airline.repository.SupportRepository;
 import com.example.airline.repository.UsersRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class AdminController {
     private final BookingKSRepository bookingKSRepository;
     private final BookingRepository bookingRepository;
     private final FlightRepository flightRepository;
+    private final SupportRepository supportRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
     private final String mailFrom;
@@ -52,6 +56,7 @@ public class AdminController {
             BookingKSRepository bookingKSRepository,
             BookingRepository bookingRepository,
             FlightRepository flightRepository,
+            SupportRepository supportRepository,
             PasswordEncoder passwordEncoder,
             JavaMailSender mailSender,
             @Value("${spring.mail.username:}") String mailFrom,
@@ -62,6 +67,7 @@ public class AdminController {
         this.bookingKSRepository = bookingKSRepository;
         this.bookingRepository = bookingRepository;
         this.flightRepository = flightRepository;
+        this.supportRepository = supportRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.mailFrom = mailFrom;
@@ -549,5 +555,51 @@ public class AdminController {
         if (!isAdmin(session)) return "redirect:/admin/login";
         bookingRepository.deleteById(id);
         return "redirect:/admin/bookings";
+    }
+
+    // --- SUPPORT MESSAGE MANAGEMENT ---
+
+    @GetMapping("/support")
+    public String listSupportMessages(Model model, HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/admin/login";
+        
+        List<SupportMessage> messages = supportRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        model.addAttribute("messages", messages);
+        return "admin/support";
+    }
+
+    @PostMapping("/support/reply")
+    public String replyToSupportMessage(@RequestParam Long id, 
+                                       @RequestParam String adminReply, 
+                                       HttpSession session, 
+                                       RedirectAttributes redirectAttributes) {
+        if (!isAdmin(session)) return "redirect:/admin/login";
+        
+        SupportMessage message = supportRepository.findById(id).orElse(null);
+        if (message != null) {
+            message.setAdminReply(adminReply);
+            message.setRepliedAt(LocalDateTime.now());
+            message.setStatus("RESOLVED");
+            supportRepository.save(message);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã gửi phản hồi thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy tin nhắn hỗ trợ.");
+        }
+        
+        return "redirect:/admin/support";
+    }
+
+    @GetMapping("/support/delete/{id}")
+    public String deleteSupportMessage(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!isAdmin(session)) return "redirect:/admin/login";
+        
+        try {
+            supportRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã xóa tin nhắn thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi xóa tin nhắn.");
+        }
+        
+        return "redirect:/admin/support";
     }
 }

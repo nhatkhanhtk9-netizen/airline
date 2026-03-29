@@ -24,12 +24,14 @@ public class SupportController {
     public String showSupportPage(Model model, HttpSession session) {
         SupportMessage message = new SupportMessage();
         
-        // Nếu đã đăng nhập, tự động điền thông tin
+        // Nếu đã đăng nhập, tự động điền thông tin và lấy lịch sử tin nhắn
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
         if (loggedInUser != null) {
             message.setFullName(loggedInUser.getFullName());
             message.setEmail(loggedInUser.getEmail());
             message.setPhone(loggedInUser.getPhone());
+            
+            model.addAttribute("history", supportRepository.findByEmailOrderByCreatedAtDesc(loggedInUser.getEmail()));
         }
         
         model.addAttribute("supportMessage", message);
