@@ -108,6 +108,106 @@
             border-radius: 999px;
             font-weight: 800;
         }
+        .donut {
+            --c1: #0d6efd;
+            --c2: #20c997;
+            --c3: #ffc107;
+            --end1: 0%;
+            --end2: 0%;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--c1) 0 var(--end1),
+                var(--c2) var(--end1) var(--end2),
+                var(--c3) var(--end2) 100%
+            );
+            position: relative;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+            flex: 0 0 auto;
+        }
+        .donut::after {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            background: white;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1;
+            padding: 10px;
+        }
+        .donut-total {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #111827;
+            line-height: 1.1;
+        }
+        .donut-sub {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #6c757d;
+        }
+        .donut-empty {
+            background: conic-gradient(#e9ecef 0 100%);
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px;
+            background: #fff;
+        }
+        .legend-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            flex: 0 0 auto;
+        }
+        .legend-name {
+            font-weight: 800;
+            color: #374151;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .legend-right {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex: 0 0 auto;
+        }
+        .legend-count {
+            font-weight: 900;
+            color: #111827;
+        }
+        .legend-percent {
+            font-weight: 800;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -203,26 +303,65 @@
                         <div class="card-header bg-white py-3">
                             <h5 class="mb-0 fw-bold">Chỉ số tổng hợp</h5>
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                                <div class="text-muted fw-bold">Vé máy bay</div>
-                                <div class="summary-metric" th:text="${flightBookingCount}">0</div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                                <div class="text-muted fw-bold">Khách sạn</div>
-                                <div class="summary-metric" th:text="${hotelBookingCount}">0</div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                                <div class="text-muted fw-bold">Đặt chỗ khác</div>
-                                <div class="summary-metric" th:text="${generalBookingCount}">0</div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between py-2">
-                                <div class="text-muted fw-bold">Doanh thu (ước tính)</div>
-                                <div class="summary-metric text-danger" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</div>
-                            </div>
-                            <div class="small text-muted mt-2">
-                                Bay: <span class="fw-bold" th:text="${#numbers.formatDecimal(flightRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
-                                • Khác: <span class="fw-bold" th:text="${#numbers.formatDecimal(generalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                        <div class="card-body" th:with="
+                            total=${bookingCount},
+                            pFlight=${total > 0 ? (flightBookingCount * 100.0 / total) : 0},
+                            pHotel=${total > 0 ? (hotelBookingCount * 100.0 / total) : 0},
+                            pGeneral=${total > 0 ? (generalBookingCount * 100.0 / total) : 0},
+                            end1=${pFlight},
+                            end2=${pFlight + pHotel}
+                        ">
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <div class="donut" th:classappend="${bookingCount == 0} ? ' donut-empty' : ''" th:style="'--end1:' + ${end1} + '%;--end2:' + ${end2} + '%;'">
+                                    <div class="donut-center">
+                                        <div class="donut-total" th:text="${bookingCount}">0</div>
+                                        <div class="donut-sub">Tổng đơn</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex-grow-1" style="min-width: 260px;">
+                                    <div class="legend mb-3">
+                                        <div class="legend-item">
+                                            <div class="legend-left">
+                                                <span class="legend-dot" style="background:#0d6efd;"></span>
+                                                <span class="legend-name">Vé máy bay</span>
+                                            </div>
+                                            <div class="legend-right">
+                                                <span class="legend-count" th:text="${flightBookingCount}">0</span>
+                                                <span class="legend-percent" th:text="${#numbers.formatDecimal(pFlight, 0, 'COMMA', 1, 'POINT')} + '%'">0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-left">
+                                                <span class="legend-dot" style="background:#20c997;"></span>
+                                                <span class="legend-name">Khách sạn</span>
+                                            </div>
+                                            <div class="legend-right">
+                                                <span class="legend-count" th:text="${hotelBookingCount}">0</span>
+                                                <span class="legend-percent" th:text="${#numbers.formatDecimal(pHotel, 0, 'COMMA', 1, 'POINT')} + '%'">0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-left">
+                                                <span class="legend-dot" style="background:#ffc107;"></span>
+                                                <span class="legend-name">Đặt chỗ khác</span>
+                                            </div>
+                                            <div class="legend-right">
+                                                <span class="legend-count" th:text="${generalBookingCount}">0</span>
+                                                <span class="legend-percent" th:text="${#numbers.formatDecimal(pGeneral, 0, 'COMMA', 1, 'POINT')} + '%'">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between py-2 border-top">
+                                        <div class="text-muted fw-bold">Doanh thu (ước tính)</div>
+                                        <div class="summary-metric text-danger" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</div>
+                                    </div>
+                                    <div class="small text-muted mt-2">
+                                        Bay: <span class="fw-bold" th:text="${#numbers.formatDecimal(flightRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                                        • Khác: <span class="fw-bold" th:text="${#numbers.formatDecimal(generalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
