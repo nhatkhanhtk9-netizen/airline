@@ -926,16 +926,15 @@
 
         <div id="serviceFormsSticky" class="position-relative" style="min-height:180px;">
             <!-- Các form giữ nguyên code cũ -->
-            <form id="flightFormSticky" class="service-form-sticky active-form">
-                <input type="text" class="form-control" placeholder="Điểm đi">
-                <input type="text" class="form-control" placeholder="Điểm đến">
-                <input type="date" class="form-control">
-                <input type="date" class="form-control">
-                <select class="form-select">
-                    <option selected>Số hành khách</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+            <form id="flightFormSticky" class="service-form-sticky active-form" action="/flights" method="GET">
+                <input type="text" name="origin" class="form-control" placeholder="Điểm đi" required>
+                <input type="text" name="destination" class="form-control" placeholder="Điểm đến" required>
+                <input type="date" name="date" class="form-control" required>
+                <input type="hidden" name="submitted" value="1">
+                <select name="guests" class="form-select">
+                    <option value="1" selected>1 hành khách</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                 </select>
                 <button type="submit" class="btn btn-primary">Tìm chuyến bay</button>
             </form>

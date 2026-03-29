@@ -856,9 +856,7 @@
                         <span class="price-text" th:text="${#numbers.formatInteger(flight.price, 3, 'POINT')}">1.200.000</span>
                         <span class="text-muted small fw-bold"> VNĐ/người</span>
                     </div>
-                    <form th:action="@{/flight/quick-book/{id}(id=${flight.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="btn-book">Đặt vé ngay</button>
-                    </form>
+                    <a th:href="@{/flight/form(flightId=${flight.id})}" class="btn-book text-decoration-none d-inline-block">Đặt vé ngay</a>
                 </div>
             </div>
         </div>

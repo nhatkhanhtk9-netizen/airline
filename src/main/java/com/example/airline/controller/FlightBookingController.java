@@ -127,6 +127,7 @@ public class FlightBookingController {
         }
     }
 
+    /* 
     @PostMapping("/quick-book/{id}")
     public String quickBook(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         Users loggedInUser = (Users) session.getAttribute("loggedInUser");
@@ -162,6 +163,7 @@ public class FlightBookingController {
             return "redirect:/flights";
         }
     }
+    */
 
     @GetMapping("/confirm/{id}")
     public String showConfirmPage(@PathVariable Long id, HttpSession session, Model model) {
